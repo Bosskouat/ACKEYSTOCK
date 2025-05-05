@@ -1,0 +1,190 @@
+{# filepath: c:\www\ACKEYSTOCK\app\templates\produits\stocks.html.twig #}
+{% extends "base.html.twig" %}
+
+{% block title %}Suivi des Stocks - ACKEYSTOCK{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Suivi des Stocks en Temps Réel</h1>
+        <div class="page-actions">
+            <a href="index.php?uri=ajouter-produit" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Nouveau Produit
+            </a>
+        </div>
+    </div>
+    
+    <div class="row stock-stats">
+        <div class="col-lg-3 col-md-6">
+            <div class="stat-card">
+                <div class="stat-card-body">
+                    <div class="stat-card-icon bg-primary">
+                        <i class="fas fa-boxes"></i>
+                    </div>
+                    <div class="stat-card-info">
+                        <div class="stat-card-value">{{ stats.total_produits }}</div>
+                        <div class="stat-card-title">Produits en stock</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6">
+            <div class="stat-card">
+                <div class="stat-card-body">
+                    <div class="stat-card-icon bg-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="stat-card-info">
+                        <div class="stat-card-value">{{ stats.stock_bas }}</div>
+                        <div class="stat-card-title">Stock bas</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6">
+            <div class="stat-card">
+                <div class="stat-card-body">
+                    <div class="stat-card-icon bg-danger">
+                        <i class="fas fa-times-circle"></i>
+                    </div>
+                    <div class="stat-card-info">
+                        <div class="stat-card-value">{{ stats.rupture }}</div>
+                        <div class="stat-card-title">Ruptures de stock</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6">
+            <div class="stat-card">
+                <div class="stat-card-body">
+                    <div class="stat-card-icon bg-success">
+                        <i class="fas fa-euro-sign"></i>
+                    </div>
+                    <div class="stat-card-info">
+                        <div class="stat-card-value">{{ stats.valeur|number_format(2, ',', ' ') }} €</div>
+                        <div class="stat-card-title">Valeur du stock</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="stock-filters">
+        <div class="form-inline">
+            <div class="form-group mr-2">
+                <input type="text" id="searchInput" class="form-control" placeholder="Rechercher un produit...">
+            </div>
+            <div class="form-group mr-2">
+                <select id="categoryFilter" class="form-control">
+                    <option value="">Toutes les catégories</option>
+                    {% for categorie in categories %}
+                        <option value="{{ categorie.id }}">{{ categorie.nom }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <select id="stockFilter" class="form-control">
+                    <option value="all">Tous les niveaux de stock</option>
+                    <option value="low">Stock bas</option>
+                    <option value="out">Rupture de stock</option>
+                    <option value="ok">Stock normal</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    
+    {% if produits|length > 0 %}
+        <div class="table-responsive">
+            <table class="table table-hover" id="stockTable">
+                <thead>
+                    <tr>
+                        <th>Produit</th>
+                        <th>Catégorie</th>
+                        <th>Stock</th>
+                        <th>Seuil d'alerte</th>
+                        <th>Valeur</th>
+                        <th>Dernière entrée</th>
+                        <th>Dernière sortie</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for produit in produits %}
+                        <tr class="{{ produit.quantite == 0 ? 'table-danger' : (produit.quantite <= produit.seuil ? 'table-warning' : '') }}"
+                            data-categorie="{{ produit.categorie_id }}"
+                            data-stock-status="{{ produit.quantite == 0 ? 'out' : (produit.quantite <= produit.seuil ? 'low' : 'ok') }}">
+                            <td>{{ produit.nom }}</td>
+                            <td>{{ produit.nom_categorie }}</td>
+                            <td>
+                                <span class="stock-badge {{ produit.quantite == 0 ? 'stock-out' : (produit.quantite <= produit.seuil ? 'stock-low' : 'stock-ok') }}">
+                                    {{ produit.quantite }}
+                                </span>
+                            </td>
+                            <td>{{ produit.seuil }}</td>
+                            <td>{{ (produit.quantite * produit.prix_achat)|number_format(2, ',', ' ') }} €</td>
+                            <td>{{ produit.date_derniere_entree ? produit.date_derniere_entree|date('d/m/Y') : '-' }}</td>
+                            <td>{{ produit.date_derniere_sortie ? produit.date_derniere_sortie|date('d/m/Y') : '-' }}</td>
+                            <td class="actions">
+                                <a href="index.php?uri=ajouter-entree&produit_id={{ produit.id }}" class="btn btn-success btn-sm" title="Ajouter une entrée">
+                                    <i class="fas fa-plus"></i>
+                                </a>
+                                <a href="index.php?uri=ajouter-sortie&produit_id={{ produit.id }}" class="btn btn-warning btn-sm" title="Ajouter une sortie">
+                                    <i class="fas fa-minus"></i>
+                                </a>
+                                <a href="index.php?uri=historique-produit&id={{ produit.id }}" class="btn btn-info btn-sm" title="Historique">
+                                    <i class="fas fa-history"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            Aucun produit enregistré.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('searchInput');
+        const categoryFilter = document.getElementById('categoryFilter');
+        const stockFilter = document.getElementById('stockFilter');
+        const table = document.getElementById('stockTable');
+        const rows = table.querySelectorAll('tbody tr');
+        
+        function filterTable() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const category = categoryFilter.value;
+            const stockStatus = stockFilter.value;
+            
+            rows.forEach(row => {
+                const productName = row.cells[0].textContent.toLowerCase();
+                const rowCategory = row.getAttribute('data-categorie');
+                const rowStockStatus = row.getAttribute('data-stock-status');
+                
+                const matchesSearch = productName.includes(searchTerm);
+                const matchesCategory = category === '' || rowCategory === category;
+                const matchesStock = stockStatus === 'all' || rowStockStatus === stockStatus;
+                
+                if (matchesSearch && matchesCategory && matchesStock) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+        
+        searchInput.addEventListener('input', filterTable);
+        categoryFilter.addEventListener('change', filterTable);
+        stockFilter.addEventListener('change', filterTable);
+    });
+</script>
+{% endblock %}

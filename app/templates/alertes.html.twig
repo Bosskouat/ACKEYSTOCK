@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alertes - ACKEYSTOCK</title>
+  <meta name="description" content="Liste des alertes de stock dans l'application ACKEYSTOCK." />
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <header>
+    <nav class="navbar">
+      <ul>
+        <li><a href="index.php?uri=dashboard">Dashboard</a></li>
+        <li><a href="index.php?uri=alertes">Alertes</a></li>
+        <li><a href="index.php?uri=logout">Déconnexion</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="alertes-section">
+      <h1>Alertes de stock</h1>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Produit</th>
+            <th>Quantité actuelle</th>
+            <th>Seuil critique</th>
+            <th>État</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Produit A</td>
+            <td>5</td>
+            <td>10</td>
+            <td><span class="alerte alerte-rouge">Rupture proche</span></td>
+          </tr>
+          <tr>
+            <td>Produit B</td>
+            <td>0</td>
+            <td>5</td>
+            <td><span class="alerte alerte-rouge">Rupture</span></td>
+          </tr>
+          <tr>
+            <td>Produit C</td>
+            <td>15</td>
+            <td>10</td>
+            <td><span class="alerte alerte-vert">Stock suffisant</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="alerts-container">
+        {% if unread_alerts|length > 0 %}
+            <div class="alerts-badge" data-count="{{ unread_alerts|length }}">
+                <i class="fas fa-bell"></i>
+            </div>
+            <div class="alerts-dropdown">
+                <div class="alerts-header">
+                    <h3>Notifications</h3>
+                    <button class="mark-all-read">Tout marquer comme lu</button>
+                </div>
+                <div class="alerts-list">
+                    {% for alert in unread_alerts %}
+                        <div class="alert-item {{ alert.type }}" data-alert-id="{{ alert.id }}">
+                            <div class="alert-icon">
+                                {% if alert.type == 'rupture' %}
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                {% else %}
+                                    <i class="fas fa-exclamation-circle"></i>
+                                {% endif %}
+                            </div>
+                            <div class="alert-content">
+                                <p>{{ alert.message }}</p>
+                                <small>{{ alert.date_creation|date('d/m/Y H:i') }}</small>
+                            </div>
+                            <button class="mark-read" title="Marquer comme lu">
+                                <i class="fas fa-check"></i>
+                            </button>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer-site">
+    <div class="footer-links">
+      <a href="index.php?uri=mentions-legales">Mentions légales</a>
+      <a href="index.php?uri=politique-confidentialite">Confidentialité</a>
+      <a href="index.php?uri=accessibilite">Accessibilité</a>
+      <a href="index.php?uri=contact">Contact</a>
+    </div>
+    <p>&copy; 2025 ACKEYSTOCK. Tous droits réservés.</p>
+  </footer>
+
+</body>
+</html>

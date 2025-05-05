@@ -1,0 +1,62 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Modifier une Sortie de Stock{% endblock %}
+
+{% block content %}
+    <header>
+        <nav class="navbar">
+            <ul>
+                <li><a href="index.php?uri=dashboard">Dashboard</a></li>
+                <li><a href="index.php?uri=sorties-stock" class="active">Sorties Stock</a></li>
+                <li><a href="index.php?uri=logout">Déconnexion</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <h1>Modifier une Sortie de Stock</h1>
+
+            {% if message %}
+                <div class="alert alert-{{ message.type }}">
+                    {{ message.text }}
+                </div>
+            {% endif %}
+
+            <form method="POST" action="index.php?uri=modifier-sortie-stock" class="form-stock">
+                <input type="hidden" name="id" value="{{ sortie.id }}">
+
+                <div class="form-group">
+                    <label for="produit_id">Produit :</label>
+                    <select name="produit_id" id="produit_id" required>
+                        {% for produit in produits %}
+                            <option value="{{ produit.id }}" {% if produit.id == sortie.produit_id %}selected{% endif %}>
+                                {{ produit.nom }} (Stock: {{ produit.quantite }})
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="quantite">Quantité :</label>
+                    <input type="number" name="quantite" id="quantite" value="{{ sortie.quantite }}" required min="1">
+                </div>
+
+                <div class="form-group">
+                    <label for="motif">Motif de la sortie :</label>
+                    <input type="text" name="motif" id="motif" value="{{ sortie.motif }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="date_sortie">Date de sortie :</label>
+                    <input type="date" name="date_sortie" id="date_sortie" value="{{ sortie.date_sortie }}" required>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Enregistrer</button>
+                    <a href="index.php?uri=sorties-stock" class="btn-secondary">Annuler</a>
+                </div>
+            </form>
+        </div>
+    </main>
+{% endblock %}

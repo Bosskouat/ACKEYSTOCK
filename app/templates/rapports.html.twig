@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Rapports de stock, mouvements et prévisions d’achats pour ACKEYSTOCK." />
+  <title>Rapports - ACKEYSTOCK</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <header>
+    <nav class="navbar">
+      <ul>
+        <li><a href="index.php?uri=dashboard">Dashboard</a></li>
+        <li><a href="index.php?uri=rapports">Rapports</a></li>
+        <li><a href="index.php?uri=logout">Déconnexion</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <h1>Rapports</h1>
+    </section>
+
+    <div class="container">
+        <h1>Rapports et Analyses</h1>
+
+        <!-- Stock Actuel -->
+        <section class="rapport-stock">
+            <h2>État du Stock</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Produit</th>
+                        <th>Catégorie</th>
+                        <th>Quantité</th>
+                        <th>Seuil</th>
+                        <th>Statut</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for produit in rapport.stock_actuel %}
+                        <tr class="{% if produit.quantite <= produit.seuil %}warning{% endif %}">
+                            <td>{{ produit.nom }}</td>
+                            <td>{{ produit.categorie_nom }}</td>
+                            <td>{{ produit.quantite }}</td>
+                            <td>{{ produit.seuil }}</td>
+                            <td>
+                                {% if produit.quantite <= 0 %}
+                                    <span class="badge badge-danger">Rupture</span>
+                            {% elseif produit.quantite <= produit.seuil %}
+                                    <span class="badge badge-warning">Stock Bas</span>
+                            {% else %}
+                                    <span class="badge badge-success">OK</span>
+                            {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Mouvements Récents -->
+        <section class="rapport-mouvements">
+            <h2>Derniers Mouvements</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Produit</th>
+                        <th>Quantité</th>
+                        <th>Fournisseur</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for mouvement in rapport.mouvements %}
+                        <tr>
+                            <td>{{ mouvement.date|date('d/m/Y H:i') }}</td>
+                            <td>
+                                <span class="badge badge-{{ mouvement.type == 'entrée' ? 'success' : 'danger' }}">
+                                    {{ mouvement.type|capitalize }}
+                            </span>
+                            </td>
+                            <td>{{ mouvement.produit_nom }}</td>
+                            <td>{{ mouvement.quantite }}</td>
+                            <td>{{ mouvement.fournisseur ?? '-' }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Prévisions et Recommandations -->
+        <section class="rapport-previsions">
+            <h2>Prévisions d'Achats</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Produit</th>
+                        <th>Stock Actuel</th>
+                        <th>Consommation Moyenne</th>
+                        <th>Quantité Recommandée</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for prevision in rapport.previsions %}
+                        <tr>
+                            <td>{{ prevision.nom }}</td>
+                            <td>{{ prevision.stock_actuel }}</td>
+                            <td>{{ prevision.consommation_moyenne|number_format(1) }}/mois</td>
+                            <td>{{ prevision.quantite_recommandee }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Statistiques -->
+        <section class="statistiques">
+            <h2>Statistiques Générales</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">{{ rapport.statistiques.total_produits }}</div>
+                    <div class="stat-label">Produits Total</div>
+                </div>
+                <div class="stat-card warning">
+                    <div class="stat-value">{{ rapport.statistiques.produits_alerte }}</div>
+                    <div class="stat-label">Produits en Alerte</div>
+                </div>
+                <div class="stat-card danger">
+                    <div class="stat-value">{{ rapport.statistiques.ruptures_stock }}</div>
+                    <div class="stat-label">Ruptures de Stock</div>
+                </div>
+                <div class="stat-card info">
+                    <div class="stat-value">{{ rapport.statistiques.stock_total }}</div>
+                    <div class="stat-label">Unités en Stock</div>
+                </div>
+            </div>
+        </section>
+    </div>
+  </main>
+
+  <footer class="footer-site">
+    <div class="footer-links">
+      <a href="index.php?uri=mentions-legales">Mentions légales</a>
+      <a href="index.php?uri=politique-confidentialite">Confidentialité</a>
+      <a href="index.php?uri=accessibilite">Accessibilité</a>
+      <a href="index.php?uri=contact">Contact</a>
+    </div>
+    <p>&copy; 2025 ACKEYSTOCK. Tous droits réservés.</p>
+  </footer>
+
+</body>
+</html>

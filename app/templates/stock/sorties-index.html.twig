@@ -1,0 +1,64 @@
+{# filepath: c:\www\ACKEYSTOCK\app\templates\stock\sorties-index.html.twig #}
+{% extends "base.html.twig" %}
+
+{% block title %}Sorties de Stock - ACKEYSTOCK{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Sorties de Stock</h1>
+        <div class="page-actions">
+            <a href="index.php?uri=ajouter-sortie" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Nouvelle Sortie
+            </a>
+        </div>
+    </div>
+    
+    {% if sorties|length > 0 %}
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Produit</th>
+                        <th>Quantité</th>
+                        <th>Motif</th>
+                        <th>Destination</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sortie in sorties %}
+                        <tr>
+                            <td>{{ sortie.date_mouvement|date('d/m/Y') }}</td>
+                            <td>{{ sortie.produit_nom }}</td>
+                            <td>{{ sortie.quantite }}</td>
+                            <td>{{ sortie.motif }}</td>
+                            <td>{{ sortie.destination }}</td>
+                            <td class="actions">
+                                <a href="javascript:void(0)" onclick="confirmDelete({{ sortie.id }})" class="btn btn-danger btn-sm">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            Aucune sortie de stock enregistrée.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function confirmDelete(id) {
+        if (confirm("Êtes-vous sûr de vouloir supprimer cette sortie ? Le stock sera automatiquement ajusté.")) {
+            window.location.href = "index.php?uri=supprimer-sortie&id=" + id;
+        }
+    }
+</script>
+{% endblock %}

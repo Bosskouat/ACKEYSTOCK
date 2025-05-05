@@ -1,0 +1,121 @@
+{# filepath: c:\www\ACKEYSTOCK\app\templates\stock\sortie-form.html.twig #}
+{% extends "base.html.twig" %}
+
+{% block title %}Ajouter une Sortie - ACKEYSTOCK{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Ajouter une Sortie de Stock</h1>
+    </div>
+    
+    <div class="card">
+        <form method="post" action="index.php?uri=ajouter-sortie">
+            <div class="form-group">
+                <label for="produit_id">Produit *</label>
+                <select id="produit_id" name="produit_id" class="form-control" required onchange="updateMaxQuantity()">
+                    <option value="">Sélectionnez un produit</option>
+                    {% for produit in produits %}
+                        <option value="{{ produit.id }}" data-stock="{{ produit.quantite }}" {% if form_data.produit_id == produit.id %}selected{% endif %}>
+                            {{ produit.nom }} (Disponible: {{ produit.quantite }})
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="quantite">Quantité *</label>
+                <input type="number" id="quantite" name="quantite" class="form-control" min="1" step="1" value="{{ form_data.quantite|default('') }}" required>
+                <small class="form-text text-muted" id="quantite-help">Maximum disponible: <span id="max-quantite">0</span></small>
+            </div>
+            
+            <div class="form-group">
+                <label for="motif">Motif *</label>
+                <select id="motif" name="motif" class="form-control" required>
+                    <option value="Vente" {% if form_data.motif == 'Vente' %}selected{% endif %}>Vente</option>
+                    <option value="Utilisation interne" {% if form_data.motif == 'Utilisation interne' %}selected{% endif %}>Utilisation interne</option>
+                    <option value="Perte" {% if form_data.motif == 'Perte' %}selected{% endif %}>Perte/Casse</option>
+                    <option value="Autre" {% if form_data.motif == 'Autre' %}selected{% endif %}>Autre</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="destination">Destination/Client</label>
+                <input type="text" id="destination" name="destination" class="form-control" value="{{ form_data.destination|default('') }}">
+            </div>
+            
+            <div class="form-group">
+                <label for="date_mouvement">Date</label>
+                <input type="date" id="date_mouvement" name="date_mouvement" class="form-control" value="{{ form_data.date_mouvement|default(date('Y-m-d')) }}">
+            </div>
+            
+            <div class="form-buttons">
+                <button type="submit" class="btn btn-primary" id="submit-btn">
+                    <i class="fas fa-save"></i> Enregistrer
+                </button>
+                <a href="index.php?uri=sorties-stock" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> Annuler
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        updateMaxQuantity();
+    });
+    
+    function updateMaxQuantity() {
+        const produitSelect = document.getElementById('produit_id');
+        const quantiteInput = document.getElementById('quantite');
+        const maxSpan = document.getElementById('max-quantite');
+        const submitBtn = document.getElementById('submit-btn');
+        
+        if (produitSelect.selectedIndex > 0) {
+            const option = produitSelect.options[produitSelect.selectedIndex];
+            const stock = parseInt(option.getAttribute('data-stock'));
+            
+            maxSpan.textContent = stock;
+            quantiteInput.setAttribute('max', stock);
+            
+            // Vérifier si la quantité actuelle est supérieure au stock
+            if (parseInt(quantiteInput.value) > stock) {
+                quantiteInput.value = stock;
+            }
+            
+            // Désactiver le bouton si stock = 0
+            if (stock === 0) {
+                submitBtn.disabled = true;
+                quantiteInput.disabled = true;
+            } else {
+                submitBtn.disabled = false;
+                quantiteInput.disabled = false;
+            }
+        } else {
+            maxSpan.textContent = '0';
+            quantiteInput.removeAttribute('max');
+        }
+    }
+    
+    // Vérification avant soumission
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const produitSelect = document.getElementById('produit_id');
+        const quantiteInput = document.getElementById('quantite');
+        
+        if (produitSelect.selectedIndex > 0) {
+            const option = produitSelect.options[produitSelect.selectedIndex];
+            const stock = parseInt(option.getAttribute('data-stock'));
+            const quantite = parseInt(quantiteInput.value);
+            
+            if (quantite > stock) {
+                e.preventDefault();
+                alert('La quantité demandée dépasse le stock disponible.');
+                quantiteInput.value = stock;
+            }
+        }
+    });
+</script>
+{% endblock %}

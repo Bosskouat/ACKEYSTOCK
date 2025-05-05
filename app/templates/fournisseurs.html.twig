@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fournisseurs - ACKEYSTOCK</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <ul>
+                <li><a href="index.php?uri=dashboard">Dashboard</a></li>
+                <li><a href="index.php?uri=produits">Produits</a></li>
+                <li><a href="index.php?uri=fournisseurs" class="active">Fournisseurs</a></li>
+                <li><a href="index.php?uri=logout">Déconnexion</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="fournisseurs-header">
+            <h1>Gestion des Fournisseurs</h1>
+            <a href="index.php?uri=ajouter-fournisseur" class="btn-ajouter">+ Ajouter un fournisseur</a>
+        </section>
+
+        {% if message %}
+            <div class="alert alert-{{ message.type }}">
+                {{ message.text }}
+            </div>
+        {% endif %}
+
+        <section class="liste-fournisseurs">
+            <div class="actions-bar">
+                {% if checkPermission(user.role, 'fournisseurs', 'add') %}
+                    <a href="index.php?uri=ajouter-fournisseur" class="btn-add">
+                        <i class="fas fa-plus"></i> Ajouter un fournisseur
+                    </a>
+                {% endif %}
+            </div>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Email</th>
+                        <th>Téléphone</th>
+                        <th>Contact</th>
+                        {% if checkPermission(user.role, 'fournisseurs', 'edit') or checkPermission(user.role, 'fournisseurs', 'delete') %}
+                            <th>Actions</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for fournisseur in fournisseurs %}
+                        <tr>
+                            <td>{{ fournisseur.nom }}</td>
+                            <td>{{ fournisseur.email }}</td>
+                            <td>{{ fournisseur.telephone }}</td>
+                            <td>{{ fournisseur.contact }}</td>
+                            
+                            {% if checkPermission(user.role, 'fournisseurs', 'edit') or checkPermission(user.role, 'fournisseurs', 'delete') %}
+                                <td class="actions">
+                                    {% if checkPermission(user.role, 'fournisseurs', 'edit') %}
+                                        <a href="index.php?uri=modifier-fournisseur&id={{ fournisseur.id }}" class="btn-edit" title="Modifier">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    {% endif %}
+                                    
+                                    {% if checkPermission(user.role, 'fournisseurs', 'delete') %}
+                                        <a href="index.php?uri=supprimer-fournisseur&id={{ fournisseur.id }}" class="btn-delete" 
+                                           onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce fournisseur?')" title="Supprimer">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    {% endif %}
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </main>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modifier un produit - ACKEYSTOCK</title>
+  <meta name="description" content="Modifier les informations d’un produit existant dans ACKEYSTOCK.">
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <header>
+    <nav>
+      <ul>
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="produits.html">Produits</a></li>
+        <li><a href="categories.html">Catégories</a></li>
+        <li><a href="commandes.html">Commandes</a></li>
+        <li><a href="utilisateurs.html">Utilisateurs</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="form-section" style="max-width:600px; margin:auto; padding:40px 20px;">
+      <h1>Modifier un produit</h1>
+
+      <form action="#" method="post">
+        <div class="form-group">
+          <label for="nom">Nom du produit</label>
+          <input type="text" id="nom" name="nom" value="Produit A" required>
+        </div>
+
+        <div class="form-group">
+          <label for="categorie">Catégorie</label>
+          <select id="categorie" name="categorie" required>
+            <option value="cat1" selected>Catégorie 1</option>
+            <option value="cat2">Catégorie 2</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="quantite">Quantité</label>
+          <input type="number" id="quantite" name="quantite" min="0" value="10" required>
+        </div>
+
+        <div class="form-group">
+          <label for="description">Description</label>
+          <textarea id="description" name="description" rows="4">Description actuelle du produit</textarea>
+        </div>
+
+        <div class="form-group">
+          <button type="submit">Mettre à jour le produit</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <footer style="text-align:center; margin-top:40px;">
+    <p>&copy; 2025 ACKEYSTOCK. Tous droits réservés.</p>
+  </footer>
+
+</body>
+</html>

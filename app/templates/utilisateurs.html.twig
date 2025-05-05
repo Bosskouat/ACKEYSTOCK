@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utilisateurs - ACKEYSTOCK</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <ul>
+                <li><a href="index.php?uri=dashboard">Dashboard</a></li>
+                <li><a href="index.php?uri=utilisateurs" class="active">Utilisateurs</a></li>
+                <li><a href="index.php?uri=logout">Déconnexion</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="utilisateurs-header">
+            <h1>Gestion des Utilisateurs</h1>
+            <a href="index.php?uri=ajouter-utilisateur" class="btn-ajouter">+ Ajouter un utilisateur</a>
+        </section>
+
+        {% if message %}
+            <div class="alert alert-{{ message.type }}">
+                {{ message.text }}
+            </div>
+        {% endif %}
+
+        <section class="liste-utilisateurs">
+            <div class="actions-bar">
+                {% if checkPermission(user.role, 'utilisateurs', 'add') %}
+                    <a href="index.php?uri=ajouter-utilisateur" class="btn-add">
+                        <i class="fas fa-plus"></i> Ajouter un utilisateur
+                    </a>
+                {% endif %}
+            </div>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Email</th>
+                        <th>Rôle</th>
+                        <th>Dernier accès</th>
+                        {% if checkPermission(user.role, 'utilisateurs', 'edit') or checkPermission(user.role, 'utilisateurs', 'delete') %}
+                            <th>Actions</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for utilisateur in utilisateurs %}
+                        <tr>
+                            <td>{{ utilisateur.nom }}</td>
+                            <td>{{ utilisateur.email }}</td>
+                            <td>{{ utilisateur.role|capitalize }}</td>
+                            <td>{{ utilisateur.dernier_acces ? utilisateur.dernier_acces|date('d/m/Y H:i') : 'Jamais' }}</td>
+                            
+                            {% if checkPermission(user.role, 'utilisateurs', 'edit') or checkPermission(user.role, 'utilisateurs', 'delete') %}
+                                <td class="actions">
+                                    {% if checkPermission(user.role, 'utilisateurs', 'edit') %}
+                                        <a href="index.php?uri=modifier-utilisateur&id={{ utilisateur.id }}" class="btn-edit" title="Modifier">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    {% endif %}
+                                    
+                                    {% if checkPermission(user.role, 'utilisateurs', 'delete') and utilisateur.id != user.id %}
+                                        <a href="index.php?uri=supprimer-utilisateur&id={{ utilisateur.id }}" class="btn-delete" 
+                                           onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur?')" title="Supprimer">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    {% endif %}
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </main>
+</body>
+</html>

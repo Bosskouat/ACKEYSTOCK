@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion de Stock - ACKEYSTOCK</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <ul>
+                <li><a href="index.php?uri=dashboard">Dashboard</a></li>
+                <li><a href="index.php?uri=produits">Produits</a></li>
+                <li><a href="index.php?uri=categories">Catégories</a></li>
+                <li><a href="index.php?uri=logout">Déconnexion</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="stock-section">
+            <h1>Gestion de Stock</h1>
+
+            <div class="stock-cards">
+                <div class="card">
+                    <h2>Entrées de stock</h2>
+                    <a href="index.php?uri=entrees-stock" class="btn">Gérer les entrées</a>
+                </div>
+
+                <div class="card">
+                    <h2>Sorties de stock</h2>
+                    <a href="index.php?uri=sorties-stock" class="btn">Gérer les sorties</a>
+                </div>
+
+                <div class="card">
+                    <h2>Inventaire</h2>
+                    <a href="index.php?uri=stock" class="btn">Voir l'inventaire</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    {% include 'footer.html.twig' %}
+</body>
+</html>

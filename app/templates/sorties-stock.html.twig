@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorties de Stock - ACKEYSTOCK</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <ul>
+                <li><a href="index.php?uri=dashboard">Dashboard</a></li>
+                <li><a href="index.php?uri=sorties-stock" class="active">Sorties Stock</a></li>
+                <li><a href="index.php?uri=logout">Déconnexion</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="sorties-header">
+            <h1>Gestion des Sorties de Stock</h1>
+            <a href="index.php?uri=ajouter-sortie-stock" class="btn-ajouter">+ Nouvelle Sortie</a>
+        </section>
+
+        {% if message %}
+            <div class="alert alert-{{ message.type }}">
+                {{ message.text }}
+            </div>
+        {% endif %}
+
+        <section class="liste-sorties">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Produit</th>
+                        <th>Quantité</th>
+                        <th>Motif</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if sorties is empty %}
+                        <tr>
+                            <td colspan="5" class="no-data">Aucune sortie de stock trouvée</td>
+                        </tr>
+                    {% else %}
+                        {% for sortie in sorties %}
+                            <tr>
+                                <td>{{ sortie.date_sortie|date('d/m/Y') }}</td>
+                                <td>{{ sortie.produit_nom }}</td>
+                                <td>{{ sortie.quantite }}</td>
+                                <td>{{ sortie.motif }}</td>
+                                <td class="actions">
+                                    <a href="index.php?uri=modifier-sortie-stock&id={{ sortie.id }}" class="btn-modifier">Modifier</a>
+                                    <a href="index.php?uri=supprimer-sortie-stock&id={{ sortie.id }}" 
+                                       class="btn-supprimer" 
+                                       onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette sortie ? Le stock sera restauré.')">
+                                        Supprimer
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                </tbody>
+            </table>
+        </section>
+    </main>
+</body>
+</html>

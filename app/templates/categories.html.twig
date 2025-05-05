@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catégories - ACKEYSTOCK</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <ul>
+                <li><a href="index.php?uri=dashboard">Dashboard</a></li>
+                <li><a href="index.php?uri=categories" class="active">Catégories</a></li>
+                <li><a href="index.php?uri=logout">Déconnexion</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="categories-list">
+            <h1>Gestion des catégories</h1>
+            
+            {% if message %}
+                <div class="alert alert-{{ message.type }}">{{ message.text }}</div>
+            {% endif %}
+
+            {# Cacher le bouton d'ajout si l'utilisateur n'a pas la permission #}
+            <div class="actions-bar">
+                {% if checkPermission(user.role, 'categories', 'add') %}
+                    <a href="index.php?uri=ajouter-categorie" class="btn-add">
+                        <i class="fas fa-plus"></i> Ajouter une catégorie
+                    </a>
+                {% endif %}
+            </div>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Description</th>
+                        {# N'afficher la colonne Actions que si l'utilisateur a au moins une permission d'action #}
+                        {% if checkPermission(user.role, 'categories', 'edit') or checkPermission(user.role, 'categories', 'delete') %}
+                            <th>Actions</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if categories is empty %}
+                        <tr>
+                            <td colspan="3" class="no-data">Aucune catégorie trouvée</td>
+                        </tr>
+                    {% else %}
+                        {% for categorie in categories %}
+                            <tr>
+                                <td>{{ categorie.nom }}</td>
+                                <td>{{ categorie.description }}</td>
+                                
+                                {# Afficher les boutons d'action conditionnellement #}
+                                {% if checkPermission(user.role, 'categories', 'edit') or checkPermission(user.role, 'categories', 'delete') %}
+                                    <td class="actions">
+                                        {% if checkPermission(user.role, 'categories', 'edit') %}
+                                            <a href="index.php?uri=modifier-categorie&id={{ categorie.id }}" class="btn-edit" title="Modifier">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        {% endif %}
+                                        
+                                        {% if checkPermission(user.role, 'categories', 'delete') %}
+                                            <a href="index.php?uri=supprimer-categorie&id={{ categorie.id }}" class="btn-delete" 
+                                               onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette catégorie?')" title="Supprimer">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        {% endif %}
+                                    </td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    {% include 'footer.html.twig' %}
+</body>
+</html>

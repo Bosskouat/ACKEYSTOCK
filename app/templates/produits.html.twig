@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produits - ACKEYSTOCK</title>
+    <meta name="description" content="Liste des produits disponibles dans le stock ACKEYSTOCK.">
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <ul>
+                <li><a href="index.php?uri=dashboard" {% if current_page == 'dashboard' %}class="active"{% endif %}>Dashboard</a></li>
+                <li><a href="index.php?uri=produits" {% if current_page == 'produits' %}class="active"{% endif %}>Produits</a></li>
+                <li><a href="index.php?uri=categories" {% if current_page == 'categories' %}class="active"{% endif %}>Catégories</a></li>
+                <li><a href="index.php?uri=logout">Déconnexion</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <h1>Gestion des Produits</h1>
+            
+            <div class="actions-bar">
+                {% if checkPermission(user.role, 'produits', 'add') %}
+                    <a href="index.php?uri=ajouter-produit" class="btn-add">
+                        <i class="fas fa-plus"></i> Ajouter un produit
+                    </a>
+                {% endif %}
+            </div>
+            
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Catégorie</th>
+                            <th>Prix</th>
+                            <th>Stock</th>
+                            {% if checkPermission(user.role, 'produits', 'edit') or checkPermission(user.role, 'produits', 'delete') %}
+                                <th>Actions</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for produit in produits %}
+                            <tr>
+                                <td>{{ produit.nom }}</td>
+                                <td>{{ produit.categorie_nom }}</td>
+                                <td>{{ produit.prix }} €</td>
+                                <td>{{ produit.quantite }}</td>
+                                
+                                {% if checkPermission(user.role, 'produits', 'edit') or checkPermission(user.role, 'produits', 'delete') %}
+                                    <td class="actions">
+                                        {% if checkPermission(user.role, 'produits', 'edit') %}
+                                            <a href="index.php?uri=modifier-produit&id={{ produit.id }}" class="btn-edit" title="Modifier">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        {% endif %}
+                                        
+                                        {% if checkPermission(user.role, 'produits', 'delete') %}
+                                            <a href="index.php?uri=supprimer-produit&id={{ produit.id }}" class="btn-delete" 
+                                               onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce produit?')" title="Supprimer">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        {% endif %}
+                                    </td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer-site">
+        <div class="footer-links">
+            <a href="index.php?uri=mentions-legales">Mentions légales</a>
+            <a href="index.php?uri=politique-confidentialite">Confidentialité</a>
+            <a href="index.php?uri=contact">Contact</a>
+        </div>
+        <p>&copy; {{ "now"|date("Y") }} ACKEYSTOCK. Tous droits réservés.</p>
+    </footer>
+
+    {% block scripts %}
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const toggleBtn = document.getElementById('toggleSearch');
+        const searchForm = document.getElementById('searchForm');
+        
+        toggleBtn.addEventListener('click', function() {
+            searchForm.classList.toggle('active');
+        });
+    });
+
+    function confirmDelete(id) {
+        if (confirm("Êtes-vous sûr de vouloir supprimer ce produit ?")) {
+            window.location.href = "index.php?uri=supprimer-produit&id=" + id;
+        }
+    }
+    </script>
+    {% endblock %}
+</body>
+</html>

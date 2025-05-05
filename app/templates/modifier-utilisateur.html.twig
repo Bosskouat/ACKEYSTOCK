@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifier un Utilisateur - ACKEYSTOCK</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <ul>
+                <li><a href="index.php?uri=dashboard">Dashboard</a></li>
+                <li><a href="index.php?uri=utilisateurs" class="active">Utilisateurs</a></li>
+                <li><a href="index.php?uri=logout">Déconnexion</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="form-section">
+            <h1>Modifier l'Utilisateur</h1>
+            
+            <form action="index.php?uri=modifier-utilisateur&id={{ utilisateur.id }}" method="POST" class="form-utilisateur">
+                <div class="form-group">
+                    <label for="nom">Nom complet</label>
+                    <input type="text" id="nom" name="nom" value="{{ utilisateur.nom }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" value="{{ utilisateur.email }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="mot_de_passe">Nouveau mot de passe (laisser vide pour ne pas modifier)</label>
+                    <input type="password" id="mot_de_passe" name="mot_de_passe">
+                </div>
+
+                <div class="form-group">
+                    <label for="role">Rôle</label>
+                    <select id="role" name="role" required>
+                        {% for role in roles %}
+                            <option value="{{ role }}" {% if role == utilisateur.role %}selected{% endif %}>
+                                {{ role|capitalize }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit">Enregistrer les modifications</button>
+                    <a href="index.php?uri=utilisateurs" class="btn-cancel">Annuler</a>
+                </div>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

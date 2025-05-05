@@ -1,0 +1,51 @@
+{# filepath: c:\www\ACKEYSTOCK\app\templates\rapports\index.html.twig #}
+{% extends "base.html.twig" %}
+
+{% block title %}Rapports - ACKEYSTOCK{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Rapports et Analyses</h1>
+    
+    <div class="reports-tiles">
+        <div class="report-tile">
+            <div class="report-icon">
+                <i class="fas fa-exchange-alt"></i>
+            </div>
+            <div class="report-info">
+                <h3>Mouvements de Stock</h3>
+                <p>Analyse des entrées et sorties sur une période donnée</p>
+                <a href="index.php?uri=rapports-mouvements" class="btn-primary">
+                    <i class="fas fa-chart-line"></i> Consulter
+                </a>
+            </div>
+        </div>
+        
+        <div class="report-tile">
+            <div class="report-icon">
+                <i class="fas fa-chart-bar"></i>
+            </div>
+            <div class="report-info">
+                <h3>Produits les Plus Vendus</h3>
+                <p>Classement des produits par volume de ventes</p>
+                <a href="index.php?uri=rapports-vendus" class="btn-primary">
+                    <i class="fas fa-chart-line"></i> Consulter
+                </a>
+            </div>
+        </div>
+        
+        <div class="report-tile">
+            <div class="report-icon">
+                <i class="fas fa-shopping-cart"></i>
+            </div>
+            <div class="report-info">
+                <h3>Prévisions d'Achats</h3>
+                <p>Recommandations d'achats basées sur la consommation</p>
+                <a href="index.php?uri=rapports-previsions" class="btn-primary">
+                    <i class="fas fa-chart-line"></i> Consulter
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

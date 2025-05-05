@@ -1,0 +1,85 @@
+{# filepath: c:\www\ACKEYSTOCK\app\templates\rapports\previsions-achats.html.twig #}
+{% extends "base.html.twig" %}
+
+{% block title %}Prévisions d'Achats - ACKEYSTOCK{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Prévisions d'Achats</h1>
+    
+    <div class="report-description">
+        <p>Ce rapport vous aide à anticiper vos besoins d'approvisionnement basés sur la consommation moyenne des 90 derniers jours.</p>
+    </div>
+    
+    <div class="report-filters">
+        <form action="index.php" method="GET" class="filter-form">
+            <input type="hidden" name="uri" value="rapports-previsions">
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="periode">Prévoir pour</label>
+                    <select id="periode" name="periode">
+                        <option value="15" {% if periode == 15 %}selected{% endif %}>15 jours</option>
+                        <option value="30" {% if periode == 30 %}selected{% endif %}>30 jours</option>
+                        <option value="60" {% if periode == 60 %}selected{% endif %}>60 jours</option>
+                        <option value="90" {% if periode == 90 %}selected{% endif %}>90 jours</option>
+                    </select>
+                </div>
+                
+                <div class="form-submit">
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-calculator"></i> Calculer
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    
+    <div class="report-actions">
+        <a href="index.php?uri=export-rapport&type=previsions&periode={{ periode }}" class="btn-export">
+            <i class="fas fa-file-csv"></i> Exporter en CSV
+        </a>
+    </div>
+    
+    <div class="report-container">
+        <table class="table report-table">
+            <thead>
+                <tr>
+                    <th>Produit</th>
+                    <th>Catégorie</th>
+                    <th class="text-right">Stock Actuel</th>
+                    <th class="text-right">Conso./Jour</th>
+                    <th class="text-right">Jours Restants</th>
+                    <th class="text-right">À Commander</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if previsions|length > 0 %}
+                    {% for prevision in previsions %}
+                        <tr class="{% if prevision.jours_restants < 7 %}alert-row{% endif %}">
+                            <td>{{ prevision.nom }}</td>
+                            <td>{{ prevision.categorie_nom }}</td>
+                            <td class="text-right">{{ prevision.stock_actuel }}</td>
+                            <td class="text-right">{{ prevision.consommation_moyenne_jour|number_format(2) }}</td>
+                            <td class="text-right">
+                                {% if prevision.jours_restants %}
+                                    <span class="{% if prevision.jours_restants < 7 %}text-danger{% endif %}">
+                                        {{ prevision.jours_restants }} jours
+                                    </span>
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            </td>
+                            <td class="text-right">{{ prevision.quantite_a_commander }}</td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center">Aucun produit ne nécessite de réapprovisionnement</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

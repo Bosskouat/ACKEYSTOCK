@@ -1,0 +1,79 @@
+{# filepath: c:\www\ACKEYSTOCK\app\templates\produits\historique.html.twig #}
+{% extends "base.html.twig" %}
+
+{% block title %}Historique des Mouvements - {{ produit.nom }} - ACKEYSTOCK{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Historique des Mouvements</h1>
+        <div class="page-info">
+            <a href="index.php?uri=stocks" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Retour aux stocks
+            </a>
+        </div>
+    </div>
+    
+    <div class="product-info-card">
+        <div class="row">
+            <div class="col-md-8">
+                <h2>{{ produit.nom }}</h2>
+                <p><strong>Catégorie:</strong> {{ produit.nom_categorie }}</p>
+                <p><strong>Stock actuel:</strong> <span class="stock-badge {{ produit.quantite == 0 ? 'stock-out' : (produit.quantite <= produit.seuil ? 'stock-low' : 'stock-ok') }}">{{ produit.quantite }}</span></p>
+                <p><strong>Seuil d'alerte:</strong> {{ produit.seuil }}</p>
+                <p><strong>Prix d'achat:</strong> {{ produit.prix_achat|number_format(2, ',', ' ') }} €</p>
+                <p><strong>Prix de vente:</strong> {{ produit.prix_vente|number_format(2, ',', ' ') }} €</p>
+            </div>
+            <div class="col-md-4 text-right">
+                <div class="product-actions">
+                    <a href="index.php?uri=ajouter-entree&produit_id={{ produit.id }}" class="btn btn-success">
+                        <i class="fas fa-plus"></i> Entrée de stock
+                    </a>
+                    <a href="index.php?uri=ajouter-sortie&produit_id={{ produit.id }}" class="btn btn-warning">
+                        <i class="fas fa-minus"></i> Sortie de stock
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {% if mouvements|length > 0 %}
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Quantité</th>
+                        <th>Source/Destination</th>
+                        <th>Référence/Motif</th>
+                        <th>Prix (si entrée)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for mouvement in mouvements %}
+                        <tr class="{{ mouvement.type == 'entrée' ? 'table-success' : 'table-warning' }}">
+                            <td>{{ mouvement.date_mouvement|date('d/m/Y') }}</td>
+                            <td>
+                                {% if mouvement.type == 'entrée' %}
+                                    <span class="badge badge-success">Entrée</span>
+                                {% else %}
+                                    <span class="badge badge-warning">Sortie</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ mouvement.quantite }}</td>
+                            <td>{{ mouvement.source }}</td>
+                            <td>{{ mouvement.reference_document }}</td>
+                            <td>{{ mouvement.type == 'entrée' ? (mouvement.prix_achat|number_format(2, ',', ' ') ~ ' €') : '-' }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            Aucun mouvement enregistré pour ce produit.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

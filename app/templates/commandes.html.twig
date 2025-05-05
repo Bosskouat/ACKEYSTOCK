@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Commandes - ACKEYSTOCK</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <ul>
+                <li><a href="index.php?uri=dashboard">Dashboard</a></li>
+                <li><a href="index.php?uri=commandes" class="active">Commandes</a></li>
+                <li><a href="index.php?uri=logout">Déconnexion</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="commandes-header">
+            <h1>Liste des Commandes</h1>
+            <a href="index.php?uri=ajouter-commande" class="btn-ajouter">+ Nouvelle commande</a>
+        </section>
+
+        {% if message %}
+            <div class="alert alert-{{ message.type }}">
+                {{ message.text }}
+            </div>
+        {% endif %}
+
+        <section class="liste-commandes">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Référence</th>
+                        <th>Date</th>
+                        <th>Fournisseur</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if commandes is empty %}
+                        <tr>
+                            <td colspan="5" class="no-data">Aucune commande trouvée</td>
+                        </tr>
+                    {% else %}
+                        {% for commande in commandes %}
+                            <tr>
+                                <td>{{ commande.reference }}</td>
+                                <td>{{ commande.date_commande|date("d/m/Y") }}</td>
+                                <td>{{ commande.fournisseur_nom }}</td>
+                                <td>
+                                    <span class="statut statut-{{ commande.statut|lower }}">
+                                        {{ commande.statut }}
+                                    </span>
+                                </td>
+                                <td class="actions">
+                                    <a href="index.php?uri=modifier-commande&id={{ commande.id }}" 
+                                       class="btn-modifier">Modifier</a>
+                                    <a href="index.php?uri=supprimer-commande&id={{ commande.id }}" 
+                                       class="btn-supprimer"
+                                       onclick="return confirm('Voulez-vous vraiment supprimer la commande {{ commande.reference }} ?')">
+                                        Supprimer
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                </tbody>
+            </table>
+        </section>
+    </main>
+</body>
+</html>

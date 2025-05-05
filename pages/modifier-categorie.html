@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modifier une catégorie - ACKEYSTOCK</title>
+  <meta name="description" content="Formulaire pour modifier une catégorie dans ACKEYSTOCK.">
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <header>
+    <nav>
+      <ul>
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="produits.html">Produits</a></li>
+        <li><a href="categories.html">Catégories</a></li>
+        <li><a href="commandes.html">Commandes</a></li>
+        <li><a href="utilisateurs.html">Utilisateurs</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="form-section" style="max-width:600px; margin:auto; padding:40px 20px;">
+      <h1>Modifier une catégorie</h1>
+
+      <form action="#" method="post">
+        <div class="form-group">
+          <label for="nom">Nom de la catégorie</label>
+          <input type="text" id="nom" name="nom" value="Catégorie Exemple" required>
+        </div>
+
+        <div class="form-group">
+          <label for="description">Description</label>
+          <textarea id="description" name="description" rows="4">Description actuelle de la catégorie</textarea>
+        </div>
+
+        <div class="form-group">
+          <button type="submit">Enregistrer les modifications</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <footer style="text-align:center; margin-top:40px;">
+    <p>&copy; 2025 ACKEYSTOCK. Tous droits réservés.</p>
+  </footer>
+
+</body>
+</html>

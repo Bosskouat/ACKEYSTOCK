@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nouvelle Commande - ACKEYSTOCK</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <ul>
+                <li><a href="index.php?uri=dashboard">Dashboard</a></li>
+                <li><a href="index.php?uri=commandes" class="active">Commandes</a></li>
+                <li><a href="index.php?uri=logout">Déconnexion</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="form-section">
+            <h1>Nouvelle Commande</h1>
+            
+            <form action="index.php?uri=ajouter-commande" method="POST" class="form-commande" id="commandeForm">
+                {% if fournisseurs is empty %}
+                    <div class="alert alert-warning">Aucun fournisseur disponible</div>
+                {% endif %}
+
+                <div class="form-group">
+                    <label for="fournisseur_id">Fournisseur</label>
+                    <select id="fournisseur_id" name="fournisseur_id" required class="select-fournisseur">
+                        <option value="">Sélectionner un fournisseur</option>
+                        {% for fournisseur in fournisseurs %}
+                            <option value="{{ fournisseur.id }}">
+                                {{ fournisseur.nom }} - {{ fournisseur.email }}
+                                {% if fournisseur.telephone %}
+                                    ({{ fournisseur.telephone }})
+                                {% endif %}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="produits-section">
+                    <h2>Produits de la commande</h2>
+                    <div id="produits-container">
+                        <div class="produit-ligne">
+                            <div class="input-group">
+                                <label for="nom_produit">Nom du produit</label>
+                                <input type="text" name="noms_produits[]" required class="produit-input">
+                            </div>
+                            <div class="input-group">
+                                <label for="quantite">Quantité</label>
+                                <input type="number" name="quantites[]" min="1" required class="quantite-input">
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" id="ajouterProduit" class="btn-secondary">
+                        + Ajouter un autre produit
+                    </button>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit">Créer la commande</button>
+                    <a href="index.php?uri=commandes" class="btn-cancel">Annuler</a>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const container = document.getElementById('produits-container');
+        const btnAjouter = document.getElementById('ajouterProduit');
+
+        btnAjouter.addEventListener('click', function() {
+            const ligne = container.querySelector('.produit-ligne').cloneNode(true);
+            ligne.querySelectorAll('input').forEach(input => input.value = '');
+            container.appendChild(ligne);
+        });
+    });
+    </script>
+</body>
+</html>

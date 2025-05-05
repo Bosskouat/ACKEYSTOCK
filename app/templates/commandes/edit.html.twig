@@ -1,0 +1,50 @@
+{# filepath: c:\www\ACKEYSTOCK\app\templates\commandes\edit.html.twig #}
+{% extends "base.html.twig" %}
+
+{% block title %}Modifier Commande - ACKEYSTOCK{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Modifier la commande</h1>
+    
+    <form method="post" action="index.php?uri=update-commande&id={{ commande.id }}">
+        <div class="form-group">
+            <label for="reference">Référence</label>
+            <input type="text" id="reference" name="reference" value="{{ commande.reference }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="fournisseur_id">Fournisseur</label>
+            <select id="fournisseur_id" name="fournisseur_id" required>
+                <option value="">Sélectionnez un fournisseur</option>
+                {% for fournisseur in fournisseurs %}
+                    <option value="{{ fournisseur.id }}" {% if fournisseur.id == commande.fournisseur_id %}selected{% endif %}>
+                        {{ fournisseur.nom }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="date_commande">Date de commande</label>
+            <input type="date" id="date_commande" name="date_commande" value="{{ commande.date_commande }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="statut">Statut</label>
+            <select id="statut" name="statut" required>
+                {% for key, label in statuts %}
+                    <option value="{{ key }}" {% if key == commande.statut %}selected{% endif %}>
+                        {{ label }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="form-buttons">
+            <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+            <a href="index.php?uri=commandes" class="btn btn-secondary">Annuler</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

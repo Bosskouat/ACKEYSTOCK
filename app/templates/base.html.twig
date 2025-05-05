@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ACKEYSTOCK{% endblock %}</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" href="../images/favicon.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    {% block stylesheets %}{% endblock %}
+</head>
+<body>
+    {# Vérification des permissions pour chaque module #}
+    {% if user is defined and user is not null %}
+        {% set can_view_dashboard = checkPermission(user.role, 'dashboard', 'view') %}
+        {% set can_view_produits = checkPermission(user.role, 'produits', 'view') %}
+        {% set can_view_entrees_stock = checkPermission(user.role, 'entrees-stock', 'view') %}
+        {% set can_view_sorties_stock = checkPermission(user.role, 'sorties-stock', 'view') %}
+        {% set can_view_fournisseurs = checkPermission(user.role, 'fournisseurs', 'view') %}
+        {% set can_view_categories = checkPermission(user.role, 'categories', 'view') %}
+        {% set can_view_alertes = checkPermission(user.role, 'alertes', 'view') %}
+        {% set can_view_utilisateurs = checkPermission(user.role, 'utilisateurs', 'view') %}
+        {% set can_view_rapports = checkPermission(user.role, 'rapports', 'view') %}
+        {% set can_view_journal = checkPermission(user.role, 'journal-actions', 'view') %}
+        {% set can_view_commandes = checkPermission(user.role, 'commandes', 'view') %}
+    {% endif %}
+
+    {% if user is defined and user is not null %}
+        {# Debug dans un commentaire HTML #}
+        <!-- 
+        DIAGNOSTIC TEMPLATE:
+        User: {{ user|json_encode }}
+        Role: {{ user.role }}
+        -->
+    {% endif %}
+
+    <nav class="navbar">
+        <div class="logo">ACKEYSTOCK</div>
+        <button class="menu-toggle">
+            <i class="fas fa-bars"></i>
+        </button>
+        <ul>
+            {% if user is defined and user is not null %}
+                {# Debug en commentaire HTML #}
+                <!-- 
+                Permission produits/view: {{ checkPermission(user.role, 'produits', 'view') ? 'OUI' : 'NON' }}
+                Permission categories/view: {{ checkPermission(user.role, 'categories', 'view') ? 'OUI' : 'NON' }}
+                Permission utilisateurs/view: {{ checkPermission(user.role, 'utilisateurs', 'view') ? 'OUI' : 'NON' }}
+                -->
+                
+                {# Dashboard #}
+                {% if checkPermission(user.role, 'dashboard', 'view') %}
+                    <li><a href="index.php?uri=dashboard" class="{{ current_page == 'dashboard' ? 'active' : '' }}">
+                        <i class="fas fa-tachometer-alt"></i> Tableau de bord
+                    </a></li>
+                {% endif %}
+                
+                {# Produits #}
+                {% if checkPermission(user.role, 'produits', 'view') %}
+                    <li><a href="index.php?uri=produits" class="{{ current_page == 'produits' ? 'active' : '' }}">
+                        <i class="fas fa-box"></i> Produits
+                    </a></li>
+                {% endif %}
+                
+                {# Entrées stock #}
+                {% if checkPermission(user.role, 'entrees-stock', 'view') %}
+                    <li><a href="index.php?uri=entrees-stock" class="{{ current_page == 'entrees-stock' ? 'active' : '' }}">
+                        <i class="fas fa-arrow-right"></i> Entrées en stock
+                    </a></li>
+                {% endif %}
+                
+                {# Sorties stock #}
+                {% if checkPermission(user.role, 'sorties-stock', 'view') %}
+                    <li><a href="index.php?uri=sorties-stock" class="{{ current_page == 'sorties-stock' ? 'active' : '' }}">
+                        <i class="fas fa-arrow-left"></i> Sorties de stock
+                    </a></li>
+                {% endif %}
+                
+                {# Fournisseurs #}
+                {% if checkPermission(user.role, 'fournisseurs', 'view') %}
+                    <li><a href="index.php?uri=fournisseurs" class="{{ current_page == 'fournisseurs' ? 'active' : '' }}">
+                        <i class="fas fa-truck"></i> Fournisseurs
+                    </a></li>
+                {% endif %}
+                
+                {# Catégories #}
+                {% if checkPermission(user.role, 'categories', 'view') %}
+                    <li><a href="index.php?uri=categories" class="{{ current_page == 'categories' ? 'active' : '' }}">
+                        <i class="fas fa-tags"></i> Catégories
+                    </a></li>
+                {% endif %}
+                
+                {# Alertes #}
+                {% if checkPermission(user.role, 'alertes', 'view') %}
+                    <li><a href="index.php?uri=alertes" class="{{ current_page == 'alertes' ? 'active' : '' }}">
+                        <i class="fas fa-bell"></i> Alertes
+                    </a></li>
+                {% endif %}
+                
+                {# Utilisateurs #}
+                {% if checkPermission(user.role, 'utilisateurs', 'view') %}
+                    <li><a href="index.php?uri=utilisateurs" class="{{ current_page == 'utilisateurs' ? 'active' : '' }}">
+                        <i class="fas fa-users"></i> Utilisateurs
+                    </a></li>
+                {% endif %}
+                
+                {# Rapports #}
+                {% if checkPermission(user.role, 'rapports', 'view') %}
+                    <li><a href="index.php?uri=rapports" class="{{ current_page == 'rapports' ? 'active' : '' }}">
+                        <i class="fas fa-chart-bar"></i> Rapports
+                    </a></li>
+                {% endif %}
+                
+                {# Journal des actions #}
+                {% if checkPermission(user.role, 'journal-actions', 'view') %}
+                    <li><a href="index.php?uri=journal-actions" class="{{ current_page == 'journal-actions' ? 'active' : '' }}">
+                        <i class="fas fa-history"></i> Journal des actions
+                    </a></li>
+                {% endif %}
+                
+                {# Commandes #}
+                {% if checkPermission(user.role, 'commandes', 'view') %}
+                    <li><a href="index.php?uri=commandes" class="{{ current_page == 'commandes' ? 'active' : '' }}">
+                        <i class="fas fa-file-invoice"></i> Commandes
+                    </a></li>
+                {% endif %}
+                
+                {# Profil utilisateur #}
+                <li class="profile-menu">
+                    <a href="#" class="profile-toggle">
+                        <i class="fas fa-user-circle"></i> {{ user.nom }}
+                    </a>
+                    <ul class="profile-dropdown">
+                        <li><a href="index.php?uri=profile"><i class="fas fa-id-card"></i> Mon profil</a></li>
+                        <li><a href="index.php?uri=logout"><i class="fas fa-sign-out-alt"></i> Déconnexion</a></li>
+                    </ul>
+                </li>
+            {% else %}
+                <li><a href="index.php?uri=login" class="{{ current_page == 'login' ? 'active' : '' }}">
+                    <i class="fas fa-sign-in-alt"></i> Connexion
+                </a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <main class="content">
+        {% if message is defined and message is not null %}
+            <div class="alert alert-{{ message.type }}">
+                {{ message.text }}
+            </div>
+        {% endif %}
+        
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer-site">
+        <div class="footer-links">
+            <a href="index.php?uri=mentions-legales">Mentions légales</a>
+            <a href="index.php?uri=contact">Contact</a>
+            <a href="index.php?uri=politique-confidentialite">Politique de confidentialité</a>
+        </div>
+        <div class="copyright">
+            &copy; {{ "now"|date("Y") }} ACKEYSTOCK - Tous droits réservés
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

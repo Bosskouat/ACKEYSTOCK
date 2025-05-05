@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifier une catégorie - ACKEYSTOCK</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <ul>
+                <li><a href="index.php?uri=dashboard">Dashboard</a></li>
+                <li><a href="index.php?uri=categories">Catégories</a></li>
+                <li><a href="index.php?uri=logout">Déconnexion</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="form-section">
+            <h1>Modifier une catégorie</h1>
+            
+            {% if message %}
+                <div class="alert alert-{{ message.type }}">{{ message.text }}</div>
+            {% endif %}
+
+            <form action="index.php?uri=modifier-categorie&id={{ categorie.id }}" method="POST" class="form-categorie">
+                <div class="form-group">
+                    <label for="nom">Nom de la catégorie</label>
+                    <input type="text" id="nom" name="nom" value="{{ categorie.nom }}" required class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" rows="4" class="form-control">{{ categorie.description }}</textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit">Enregistrer</button>
+                    <a href="index.php?uri=categories" class="btn-cancel">Annuler</a>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    {% include 'footer.html.twig' %}
+</body>
+</html>

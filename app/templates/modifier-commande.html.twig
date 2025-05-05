@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifier la Commande - ACKEYSTOCK</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <ul>
+                <li><a href="index.php?uri=dashboard">Dashboard</a></li>
+                <li><a href="index.php?uri=commandes" class="active">Commandes</a></li>
+                <li><a href="index.php?uri=logout">Déconnexion</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="form-section">
+            <h1>Modifier la Commande</h1>
+            
+            <form action="index.php?uri=modifier-commande&id={{ commande.id }}" method="POST" class="form-commande">
+                <div class="form-group">
+                    <label for="fournisseur_id">Fournisseur</label>
+                    <select id="fournisseur_id" name="fournisseur_id" required class="select-fournisseur">
+                        <option value="">Sélectionner un fournisseur</option>
+                        {% for fournisseur in fournisseurs %}
+                            <option value="{{ fournisseur.id }}" 
+                                    {% if fournisseur.id == commande.fournisseur_id %}selected{% endif %}>
+                                {{ fournisseur.nom }} - {{ fournisseur.email }}
+                                {% if fournisseur.telephone %}({{ fournisseur.telephone }}){% endif %}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="produits-section">
+                    <h2>Produits de la commande</h2>
+                    <div id="produits-container">
+                        {% for produit in commande.produits %}
+                            <div class="produit-ligne">
+                                <div class="input-group">
+                                    <label>Nom du produit</label>
+                                    <input type="text" name="noms_produits[]" 
+                                           value="{{ produit.produit_nom }}" required class="produit-input">
+                                </div>
+                                <div class="input-group">
+                                    <label>Quantité</label>
+                                    <input type="number" name="quantites[]" 
+                                           value="{{ produit.quantite }}" min="1" required class="quantite-input">
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <button type="button" id="ajouterProduit" class="btn-secondary">
+                        + Ajouter un produit
+                    </button>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit">Enregistrer les modifications</button>
+                    <a href="index.php?uri=commandes" class="btn-cancel">Annuler</a>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const container = document.getElementById('produits-container');
+        const btnAjouter = document.getElementById('ajouterProduit');
+
+        btnAjouter.addEventListener('click', function() {
+            const template = `
+                <div class="produit-ligne">
+                    <div class="input-group">
+                        <label>Nom du produit</label>
+                        <input type="text" name="noms_produits[]" required class="produit-input">
+                    </div>
+                    <div class="input-group">
+                        <label>Quantité</label>
+                        <input type="number" name="quantites[]" min="1" required class="quantite-input">
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', template);
+        });
+    });
+    </script>
+</body>
+</html>
