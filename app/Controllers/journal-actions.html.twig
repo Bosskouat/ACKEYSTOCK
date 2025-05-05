@@ -1,0 +1,103 @@
+{# filepath: c:\www\ACKEYSTOCK\app\templates\journal-actions.html.twig #}
+{% extends "base.html.twig" %}
+
+{% block title %}Journal des actions - ACKEYSTOCK{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Journal des actions</h1>
+    
+    <div class="filters-container">
+        <form method="get" action="index.php">
+            <input type="hidden" name="uri" value="journal-actions">
+            
+            <div class="filter-group">
+                <label for="user_id">Utilisateur</label>
+                <select name="user_id" id="user_id">
+                    <option value="">Tous</option>
+                    {% for user in users %}
+                        <option value="{{ user.id }}" {% if filters.user_id == user.id %}selected{% endif %}>
+                            {{ user.nom }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label for="date_debut">Date début</label>
+                <input type="date" name="date_debut" id="date_debut" value="{{ filters.date_debut }}">
+            </div>
+            
+            <div class="filter-group">
+                <label for="date_fin">Date fin</label>
+                <input type="date" name="date_fin" id="date_fin" value="{{ filters.date_fin }}">
+            </div>
+            
+            <div class="filter-actions">
+                <button type="submit" class="btn-filter">Filtrer</button>
+                <a href="index.php?uri=journal-actions" class="btn-reset">Réinitialiser</a>
+            </div>
+        </form>
+    </div>
+    
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Utilisateur</th>
+                    <th>Action</th>
+                    <th>Module</th>
+                    <th>Détails</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if actions is empty %}
+                    <tr>
+                        <td colspan="5" class="text-center">Aucune action enregistrée</td>
+                    </tr>
+                {% else %}
+                    {% for entry in actions %}
+                        <tr>
+                            <td>{{ entry.date_action|date('d/m/Y H:i:s') }}</td>
+                            <td>{{ entry.utilisateur_nom ?? 'Système' }}</td>
+                            <td>{{ entry.action }}</td>
+                            <td>{{ entry.entite }}</td>
+                            <td>{{ entry.details }}</td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+    
+    {% if pagination.total > 1 %}
+        <div class="pagination">
+            {% for i in 1..pagination.total %}
+                {% if i == pagination.current %}
+                    <span class="current">{{ i }}</span>
+                {% else %}
+                    <a href="index.php?uri=journal-actions&page={{ i }}
+                       {% for key, value in filters %}
+                           {% if value %}
+                               &{{ key }}={{ value }}
+                           {% endif %}
+                       {% endfor %}">{{ i }}</a>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    {% if can_export %}
+        <div class="export-actions">
+            <a href="index.php?uri=export-journal
+               {% for key, value in filters %}
+                   {% if value %}&{{ key }}={{ value }}{% endif %}
+               {% endfor %}" 
+               class="btn-export">
+                <i class="fas fa-file-export"></i> Exporter en CSV
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

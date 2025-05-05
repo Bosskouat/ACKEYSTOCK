@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Formulaire pour ajouter une nouvelle commande dans ACKEYSTOCK.">
+  <title>Ajouter une commande - ACKEYSTOCK</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <header>
+    <nav>
+      <ul>
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="produits.html">Produits</a></li>
+        <li><a href="categories.html">Catégories</a></li>
+        <li><a href="commandes.html">Commandes</a></li>
+        <li><a href="utilisateurs.html">Utilisateurs</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="form-section">
+      <h1>Ajouter une commande</h1>
+
+      <form action="#" method="post">
+        <div class="form-group">
+          <label for="reference">Référence de la commande</label>
+          <input type="text" id="reference" name="reference" required>
+        </div>
+
+        <div class="form-group">
+          <label for="date">Date de commande</label>
+          <input type="date" id="date" name="date" required>
+        </div>
+
+        <div class="form-group">
+          <label for="fournisseur">Fournisseur</label>
+          <select id="fournisseur" name="fournisseur" required>
+            <option value="">-- Sélectionner --</option>
+            <option value="f1">Fournisseur 1</option>
+            <option value="f2">Fournisseur 2</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="produits">Produits commandés</label>
+          <select id="produits" name="produits" multiple required>
+            <option value="p1">Produit A</option>
+            <option value="p2">Produit B</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="statut">Statut</label>
+          <select id="statut" name="statut" required>
+            <option value="en_attente">En attente</option>
+            <option value="livree">Livrée</option>
+            <option value="annulee">Annulée</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <button type="submit">Valider la commande</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 ACKEYSTOCK. Tous droits réservés.</p>
+  </footer>
+
+</body>
+</html>

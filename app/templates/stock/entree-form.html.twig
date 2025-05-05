@@ -1,0 +1,69 @@
+{# filepath: c:\www\ACKEYSTOCK\app\templates\stock\entree-form.html.twig #}
+{% extends "base.html.twig" %}
+
+{% block title %}Ajouter une Entrée - ACKEYSTOCK{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Ajouter une Entrée de Stock</h1>
+    </div>
+    
+    <div class="card">
+        <form method="post" action="index.php?uri=ajouter-entree">
+            <div class="form-group">
+                <label for="produit_id">Produit *</label>
+                <select id="produit_id" name="produit_id" class="form-control" required>
+                    <option value="">Sélectionnez un produit</option>
+                    {% for produit in produits %}
+                        <option value="{{ produit.id }}" {% if form_data.produit_id == produit.id %}selected{% endif %}>
+                            {{ produit.nom }} (Stock actuel: {{ produit.quantite }})
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="quantite">Quantité *</label>
+                <input type="number" id="quantite" name="quantite" class="form-control" min="1" step="1" value="{{ form_data.quantite|default('') }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="prix_achat">Prix d'achat unitaire (€)</label>
+                <input type="number" id="prix_achat" name="prix_achat" class="form-control" min="0" step="0.01" value="{{ form_data.prix_achat|default('') }}">
+            </div>
+            
+            <div class="form-group">
+                <label for="fournisseur_id">Fournisseur *</label>
+                <select id="fournisseur_id" name="fournisseur_id" class="form-control" required>
+                    <option value="">Sélectionnez un fournisseur</option>
+                    {% for fournisseur in fournisseurs %}
+                        <option value="{{ fournisseur.id }}" {% if form_data.fournisseur_id == fournisseur.id %}selected{% endif %}>
+                            {{ fournisseur.nom }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="date_mouvement">Date</label>
+                <input type="date" id="date_mouvement" name="date_mouvement" class="form-control" value="{{ form_data.date_mouvement|default(date('Y-m-d')) }}">
+            </div>
+            
+            <div class="form-group">
+                <label for="reference_document">Référence du document</label>
+                <input type="text" id="reference_document" name="reference_document" class="form-control" value="{{ form_data.reference_document|default('') }}" placeholder="Numéro de facture, bon de livraison...">
+            </div>
+            
+            <div class="form-buttons">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Enregistrer
+                </button>
+                <a href="index.php?uri=entrees-stock" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> Annuler
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

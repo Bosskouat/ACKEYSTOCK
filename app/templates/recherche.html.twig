@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recherche - ACKEYSTOCK</title>
+  <meta name="description" content="Recherche avancée de produits, commandes ou fournisseurs dans ACKEYSTOCK." />
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <header>
+    <nav class="navbar">
+      <ul>
+        <li><a href="index.php?uri=dashboard">Dashboard</a></li>
+        <li><a href="index.php?uri=recherche">Recherche</a></li>
+        <li><a href="index.php?uri=logout">Déconnexion</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="recherche-header">
+      <h1>Recherche avancée</h1>
+
+      <form action="#" method="get" class="form-recherche">
+        <div class="form-group">
+          <label for="motcle">Mot-clé</label>
+          <input type="text" id="motcle" name="motcle" placeholder="Nom du produit, commande, etc." />
+        </div>
+
+        <div class="form-group">
+          <label for="categorie">Catégorie</label>
+          <select id="categorie" name="categorie">
+            <option value="">-- Toutes --</option>
+            <option value="cat1">Catégorie 1</option>
+            <option value="cat2">Catégorie 2</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="date">Date (approximative)</label>
+          <input type="date" id="date" name="date" />
+        </div>
+
+        <div class="form-group">
+          <button type="submit">Rechercher</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="resultats-recherche">
+      <h2>Résultats</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Nom</th>
+            <th>Date</th>
+            <th>Détails</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Produit</td>
+            <td>Produit A</td>
+            <td>2025-04-28</td>
+            <td><a href="#">Voir</a></td>
+          </tr>
+          <tr>
+            <td>Commande</td>
+            <td>CMD002</td>
+            <td>2025-04-25</td>
+            <td><a href="#">Voir</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer class="footer-site">
+    <div class="footer-links">
+      <a href="index.php?uri=mentions-legales">Mentions légales</a>
+      <a href="index.php?uri=politique-confidentialite">Confidentialité</a>
+      <a href="index.php?uri=accessibilite">Accessibilité</a>
+      <a href="index.php?uri=contact">Contact</a>
+    </div>
+    <p>&copy; 2025 ACKEYSTOCK. Tous droits réservés.</p>
+  </footer>
+
+</body>
+</html>

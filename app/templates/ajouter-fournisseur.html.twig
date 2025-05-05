@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajouter un Fournisseur - ACKEYSTOCK</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <ul>
+                <li><a href="index.php?uri=dashboard">Dashboard</a></li>
+                <li><a href="index.php?uri=fournisseurs" class="active">Fournisseurs</a></li>
+                <li><a href="index.php?uri=logout">Déconnexion</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="form-section">
+            <h1>Ajouter un Fournisseur</h1>
+            
+            <form action="index.php?uri=ajouter-fournisseur" method="POST" class="form-fournisseur">
+                <div class="form-group">
+                    <label for="nom">Nom du fournisseur</label>
+                    <input type="text" id="nom" name="nom" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="telephone">Téléphone</label>
+                    <input type="tel" id="telephone" name="telephone" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="adresse">Adresse</label>
+                    <textarea id="adresse" name="adresse" rows="3" required></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit">Ajouter le fournisseur</button>
+                    <a href="index.php?uri=fournisseurs" class="btn-cancel">Annuler</a>
+                </div>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

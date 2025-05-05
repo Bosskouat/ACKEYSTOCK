@@ -1,0 +1,75 @@
+{# filepath: c:\www\ACKEYSTOCK\app\templates\rapports\mouvements-stock.html.twig #}
+{% extends "base.html.twig" %}
+
+{% block title %}Mouvements de Stock - ACKEYSTOCK{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Rapport des Mouvements de Stock</h1>
+    
+    <div class="report-filters">
+        <form action="index.php" method="GET" class="filter-form">
+            <input type="hidden" name="uri" value="rapports-mouvements">
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="debut">Date de début</label>
+                    <input type="date" id="debut" name="debut" value="{{ debut }}">
+                </div>
+                
+                <div class="form-group">
+                    <label for="fin">Date de fin</label>
+                    <input type="date" id="fin" name="fin" value="{{ fin }}">
+                </div>
+                
+                <div class="form-submit">
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-filter"></i> Filtrer
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    
+    <div class="report-actions">
+        <a href="index.php?uri=export-rapport&type=mouvements&debut={{ debut }}&fin={{ fin }}" class="btn-export">
+            <i class="fas fa-file-csv"></i> Exporter en CSV
+        </a>
+    </div>
+    
+    <div class="report-container">
+        <table class="table report-table">
+            <thead>
+                <tr>
+                    <th>Produit</th>
+                    <th>Catégorie</th>
+                    <th class="text-right">Entrées</th>
+                    <th class="text-right">Sorties</th>
+                    <th class="text-right">Balance</th>
+                    <th class="text-right">Stock Actuel</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if mouvements|length > 0 %}
+                    {% for mouvement in mouvements %}
+                        <tr>
+                            <td>{{ mouvement.nom }}</td>
+                            <td>{{ mouvement.categorie_nom }}</td>
+                            <td class="text-right">{{ mouvement.total_entrees }}</td>
+                            <td class="text-right">{{ mouvement.total_sorties }}</td>
+                            <td class="text-right {% if mouvement.total_entrees - mouvement.total_sorties < 0 %}text-danger{% endif %}">
+                                {{ mouvement.total_entrees - mouvement.total_sorties }}
+                            </td>
+                            <td class="text-right">{{ mouvement.stock_actuel }}</td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center">Aucun mouvement trouvé pour cette période</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

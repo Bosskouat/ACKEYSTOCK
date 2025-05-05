@@ -1,0 +1,15 @@
+{# filepath: c:\www\ACKEYSTOCK\app\templates\error.html.twig #}
+{% extends "base.html.twig" %}
+
+{% block title %}Erreur - ACKEYSTOCK{% endblock %}
+
+{% block content %}
+<div class="error-container">
+    <div class="error-icon">
+        <i class="fas fa-exclamation-circle"></i>
+    </div>
+    <h1>Une erreur est survenue</h1>
+    <p>{{ message }}</p>
+    <a href="index.php?uri=dashboard" class="btn btn-primary">Retour au tableau de bord</a>
+</div>
+{% endblock %}

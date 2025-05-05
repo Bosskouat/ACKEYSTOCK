@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Liste des alertes de stock dans l'application ACKEYSTOCK.">
+  <title>Alertes - ACKEYSTOCK</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <header>
+    <nav>
+      <ul>
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="produits.html">Produits</a></li>
+        <li><a href="categories.html">Catégories</a></li>
+        <li><a href="commandes.html">Commandes</a></li>
+        <li><a href="utilisateurs.html">Utilisateurs</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="alertes-section">
+      <h1>Alertes de stock</h1>
+
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Produit</th>
+            <th scope="col">Quantité actuelle</th>
+            <th scope="col">Seuil critique</th>
+            <th scope="col">État</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Produit A</td>
+            <td>5</td>
+            <td>10</td>
+            <td><span class="alerte alerte-rouge">Rupture proche</span></td>
+          </tr>
+          <tr>
+            <td>Produit B</td>
+            <td>0</td>
+            <td>5</td>
+            <td><span class="alerte alerte-rouge">Rupture</span></td>
+          </tr>
+          <tr>
+            <td>Produit C</td>
+            <td>15</td>
+            <td>10</td>
+            <td><span class="alerte alerte-vert">Stock suffisant</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 ACKEYSTOCK. Tous droits réservés.</p>
+  </footer>
+
+</body>
+</html>

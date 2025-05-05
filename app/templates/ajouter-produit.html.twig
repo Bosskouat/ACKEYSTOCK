@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajouter un Produit - ACKEYSTOCK</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <ul>
+                <li><a href="index.php?uri=dashboard">Dashboard</a></li>
+                <li><a href="index.php?uri=produits" class="active">Produits</a></li>
+                <li><a href="index.php?uri=categories">Catégories</a></li>
+                <li><a href="index.php?uri=logout">Déconnexion</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="form-section">
+            <h1>Ajouter un Produit</h1>
+            
+            <form action="index.php?uri=ajouter-produit" method="POST" class="form-produit">
+                <div class="form-group">
+                    <label for="nom">Nom du produit</label>
+                    <input type="text" id="nom" name="nom" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" rows="3"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="quantite">Quantité</label>
+                    <input type="number" id="quantite" name="quantite" min="0" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="seuil">Seuil d'alerte</label>
+                    <input type="number" id="seuil" name="seuil" min="0" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="categorie_id">Catégorie</label>
+                    <select id="categorie_id" name="categorie_id" required>
+                        <option value="">Sélectionner une catégorie</option>
+                        {% for categorie in categories %}
+                            <option value="{{ categorie.id }}">{{ categorie.nom }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit">Ajouter le produit</button>
+                    <a href="index.php?uri=produits" class="btn-cancel">Annuler</a>
+                </div>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

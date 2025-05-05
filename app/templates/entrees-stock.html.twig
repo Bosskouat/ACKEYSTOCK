@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrées en Stock - ACKEYSTOCK</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <ul>
+                <li><a href="index.php?uri=dashboard">Dashboard</a></li>
+                <li><a href="index.php?uri=entrees-stock" class="active">Entrées Stock</a></li>
+                <li><a href="index.php?uri=logout">Déconnexion</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="page-header">
+                <h1>Gestion des Entrées en Stock</h1>
+                <p>Suivi des entrées de marchandises dans l'inventaire</p>
+            </div>
+
+            <div class="actions-bar">
+                {% if checkPermission(user.role, 'entrees-stock', 'add') %}
+                    <a href="index.php?uri=ajouter-entree" class="btn-add">
+                        <i class="fas fa-plus"></i> Ajouter une entrée
+                    </a>
+                {% endif %}
+            </div>
+
+            <div class="search-panel" id="searchPanel">
+                <form method="GET" action="index.php">
+                    <input type="hidden" name="uri" value="entrees-stock">
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="produit_id">Produit</label>
+                            <select name="produit_id" id="produit_id" class="form-control">
+                                <option value="">Tous les produits</option>
+                                {% for produit in produits %}
+                                    <option value="{{ produit.id }}" {% if search.produit_id == produit.id %}selected{% endif %}>
+                                        {{ produit.nom }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="fournisseur_id">Fournisseur</label>
+                            <select name="fournisseur_id" id="fournisseur_id" class="form-control">
+                                <option value="">Tous les fournisseurs</option>
+                                {% for fournisseur in fournisseurs %}
+                                    <option value="{{ fournisseur.id }}" {% if search.fournisseur_id == fournisseur.id %}selected{% endif %}>
+                                        {{ fournisseur.nom }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="date_debut">Date début</label>
+                            <input type="date" name="date_debut" id="date_debut" class="form-control" value="{{ search.date_debut }}">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="date_fin">Date fin</label>
+                            <input type="date" name="date_fin" id="date_fin" class="form-control" value="{{ search.date_fin }}">
+                        </div>
+                    </div>
+                    
+                    <div class="form-buttons">
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-search"></i> Rechercher
+                        </button>
+                        <a href="index.php?uri=entrees-stock" class="btn-secondary">
+                            <i class="fas fa-times"></i> Réinitialiser
+                        </a>
+                    </div>
+                </form>
+            </div>
+
+            {% if message %}
+                <div class="alert alert-{{ message.type }}">
+                    {{ message.text }}
+                </div>
+            {% endif %}
+
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Produit</th>
+                            <th>Quantité</th>
+                            <th>Fournisseur</th>
+                            <th>Prix unitaire</th>
+                            {# N'afficher la colonne Actions que si l'utilisateur a au moins une permission d'action #}
+                            {% if checkPermission(user.role, 'entrees-stock', 'edit') or checkPermission(user.role, 'entrees-stock', 'delete') %}
+                                <th>Actions</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for entree in entrees %}
+                            <tr>
+                                <td>{{ entree.date_entree|date('d/m/Y') }}</td>
+                                <td>{{ entree.produit_nom }}</td>
+                                <td>{{ entree.quantite }}</td>
+                                <td>{{ entree.fournisseur_nom }}</td>
+                                <td>{{ entree.prix_unitaire }} €</td>
+                                
+                                {# Afficher les boutons d'action conditionnellement #}
+                                {% if checkPermission(user.role, 'entrees-stock', 'edit') or checkPermission(user.role, 'entrees-stock', 'delete') %}
+                                    <td class="actions">
+                                        {% if checkPermission(user.role, 'entrees-stock', 'edit') %}
+                                            <a href="index.php?uri=modifier-entree&id={{ entree.id }}" class="btn-edit" title="Modifier">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        {% endif %}
+                                        
+                                        {% if checkPermission(user.role, 'entrees-stock', 'delete') %}
+                                            <a href="index.php?uri=supprimer-entree&id={{ entree.id }}" class="btn-delete" 
+                                               onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette entrée?')" title="Supprimer">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        {% endif %}
+                                    </td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    {% block scripts %}
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const toggleBtn = document.getElementById('toggleSearch');
+        const searchPanel = document.getElementById('searchPanel');
+        
+        // Afficher le panneau de recherche si des paramètres sont présents
+        if ({% if search|length > 0 and search|filter((v) => v != '') %}true{% else %}false{% endif %}) {
+            searchPanel.classList.add('active');
+        }
+        
+        toggleBtn.addEventListener('click', function() {
+            searchPanel.classList.toggle('active');
+        });
+    });
+    </script>
+    {% endblock %}
+</body>
+</html>

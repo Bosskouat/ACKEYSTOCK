@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Tableau de bord ACKEYSTOCK – Visualisez et accédez rapidement à toutes vos fonctionnalités.">
+  <title>Dashboard - ACKEYSTOCK</title>
+  <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../../css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <header>
+    <nav>
+      <ul>
+        <li><a href="index.php?uri=index">Accueil</a></li>
+        <li><a href="index.php?uri=dashboard">Dashboard</a></li>
+        <li><a href="index.php?uri=utilisateurs">Utilisateurs</a></li>
+        <li><a href="index.php?uri=logout">Déconnexion</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- ... Partie HEAD identique ... -->
+
+<main>
+  <section>
+    <h1 style="text-align: center; margin-top: 2rem;">Tableau de bord</h1>
+    <p style="text-align: center; margin-bottom: 3rem;">Bienvenue dans votre espace de gestion ACKEYSTOCK.</p>
+  </section>
+
+  <section class="dashboard-cards">
+    <article class="card produits">
+        <i class="fas fa-box"></i>
+        <h2>Produits</h2>
+        <a href="index.php?uri=produits">Voir les produits</a>
+    </article>
+
+    <article class="card categories">
+        <i class="fas fa-tags"></i>
+        <h2>Catégories</h2>
+        <a href="index.php?uri=categories">Voir les catégories</a>
+    </article>
+
+    <article class="card fournisseurs">
+        <i class="fas fa-truck"></i>
+        <h2>Fournisseurs</h2>
+        <a href="index.php?uri=fournisseurs">Voir les fournisseurs</a>
+    </article>
+
+    <article class="card commandes">
+        <i class="fas fa-shopping-cart"></i>
+        <h2>Commandes</h2>
+        <a href="index.php?uri=commandes">Voir les commandes</a>
+    </article>
+
+    <article class="card alertes">
+        <i class="fas fa-bell"></i>
+        <h2>Alertes</h2>
+        <a href="index.php?uri=alertes">Voir les alertes</a>
+    </article>
+
+    <article class="card rapports">
+        <i class="fas fa-chart-line"></i>
+        <h2>Rapports</h2>
+        <a href="index.php?uri=rapports">Consulter les rapports</a>
+    </article>
+
+    <article class="card journal">
+        <i class="fas fa-history"></i>
+        <h2>Journal</h2>
+        <a href="index.php?uri=journal-actions">Voir le journal</a>
+    </article>
+
+    <article class="card gestion">
+        <i class="fas fa-layer-group"></i>
+        <h2>Gestion de stock</h2>
+        <a href="index.php?uri=gestion-stock">Gérer le stock</a>
+    </article>
+  </section>
+
+  <section>
+    <h2 class="section-title">Statistiques & Graphiques</h2>
+
+    <div class="dashboard-container">
+        <div class="stats-card">
+            <h3><i class="fas fa-box"></i> Produits en stock</h3>
+            <div class="stats-value">{{ stats.total_products }}</div>
+            <div class="stats-label">
+                {% if stats.products_trend > 0 %}
+                    <span class="trend-up"><i class="fas fa-arrow-up"></i> +{{ stats.products_trend }}%</span>
+                {% else %}
+                    <span class="trend-down"><i class="fas fa-arrow-down"></i> {{ stats.products_trend }}%</span>
+                {% endif %}
+                depuis le mois dernier
+            </div>
+        </div>
+
+        <div class="stats-card">
+            <h3><i class="fas fa-exclamation-triangle"></i> Produits sous seuil</h3>
+            <div class="stats-value">{{ stats.low_stock_products }}</div>
+            <div class="stats-label">requièrent votre attention</div>
+        </div>
+
+        <div class="stats-card">
+            <h3><i class="fas fa-truck"></i> Commandes en attente</h3>
+            <div class="stats-value">{{ stats.pending_orders }}</div>
+            <div class="stats-label">à traiter</div>
+        </div>
+
+        <div class="stats-card">
+            <h3><i class="fas fa-box-open"></i> Entrées récentes</h3>
+            <div class="stats-value">{{ stats.recent_entries }}</div>
+            <div class="stats-label">ces 7 derniers jours</div>
+        </div>
+    </div>
+
+    <div class="graphs-container">
+        <div class="graph-card">
+            <h3>Mouvements de Stock (30 derniers jours)</h3>
+            <canvas id="stockChart" width="400" height="200"></canvas>
+        </div>
+        
+        <div class="graph-card">
+            <h3>Répartition par Catégorie</h3>
+            <canvas id="categoryChart" width="200" height="200"></canvas>
+        </div>
+    </div>
+  </section>
+
+  <div class="recent-activities">
+        <h3>Activités Récentes</h3>
+        
+        {% for activity in activities %}
+            <div class="activity-item">
+                <div class="activity-icon">
+                    {% if activity.type == 'entry' %}
+                        <i class="fas fa-arrow-down" style="color: #4CAF50;"></i>
+                    {% elseif activity.type == 'exit' %}
+                        <i class="fas fa-arrow-up" style="color: #f44336;"></i>
+                    {% elseif activity.type == 'alert' %}
+                        <i class="fas fa-bell" style="color: #ff9800;"></i>
+                    {% else %}
+                        <i class="fas fa-info-circle" style="color: #2196F3;"></i>
+                    {% endif %}
+                </div>
+                <div class="activity-details">
+                    <div class="activity-title">{{ activity.description }}</div>
+                    <div class="activity-time">{{ activity.date|date('d/m/Y H:i') }}</div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</main>
+
+<!-- ... FOOTER inchangé ... -->
+
+
+  <footer class="footer-site">
+    <div class="footer-links">
+      <a href="index.php?uri=mentions-legales">Mentions légales</a>
+      <a href="index.php?uri=politique-confidentialite">Confidentialité</a>
+      <a href="index.php?uri=accessibilite">Accessibilité</a>
+    </div>
+    <p>&copy; 2025 ACKEYSTOCK. Tous droits réservés.</p>
+  </footer>
+
+  {% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Stock Movement Chart
+    const stockCtx = document.getElementById('stockChart').getContext('2d');
+    const stockChart = new Chart(stockCtx, {
+        type: 'line',
+        data: {
+            labels: {{ chart_data.dates|json_encode|raw }},
+            datasets: [
+                {
+                    label: 'Entrées',
+                    data: {{ chart_data.entries|json_encode|raw }},
+                    backgroundColor: 'rgba(76, 175, 80, 0.2)',
+                    borderColor: 'rgba(76, 175, 80, 1)',
+                    borderWidth: 2
+                },
+                {
+                    label: 'Sorties',
+                    data: {{ chart_data.exits|json_encode|raw }},
+                    backgroundColor: 'rgba(244, 67, 54, 0.2)',
+                    borderColor: 'rgba(244, 67, 54, 1)',
+                    borderWidth: 2
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Category Distribution Chart
+    const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+    const categoryChart = new Chart(categoryCtx, {
+        type: 'pie',
+        data: {
+            labels: {{ chart_data.categories|json_encode|raw }},
+            datasets: [{
+                data: {{ chart_data.category_counts|json_encode|raw }},
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.7)',
+                    'rgba(54, 162, 235, 0.7)',
+                    'rgba(255, 206, 86, 0.7)',
+                    'rgba(75, 192, 192, 0.7)',
+                    'rgba(153, 102, 255, 0.7)',
+                    'rgba(255, 159, 64, 0.7)',
+                    'rgba(199, 199, 199, 0.7)',
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(199, 199, 199, 1)',
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+});
+</script>
+{% endblock %}
+</body>
+</html>

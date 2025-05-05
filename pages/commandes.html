@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Liste des commandes dans le système de gestion ACKEYSTOCK.">
+  <title>Commandes - ACKEYSTOCK</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <header>
+    <nav>
+      <ul>
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="produits.html">Produits</a></li>
+        <li><a href="categories.html">Catégories</a></li>
+        <li><a href="commandes.html">Commandes</a></li>
+        <li><a href="utilisateurs.html">Utilisateurs</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="commandes-header">
+      <h1>Commandes</h1>
+      <a href="ajouter-commande.html" class="btn-ajouter">+ Ajouter une commande</a>
+    </section>
+
+    <section class="liste-commandes">
+      <table>
+        <thead>
+          <tr>
+            <th>Référence</th>
+            <th>Date</th>
+            <th>Fournisseur</th>
+            <th>Statut</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>CMD001</td>
+            <td>2025-04-10</td>
+            <td>Fournisseur A</td>
+            <td>Livrée</td>
+            <td>
+              <a href="modifier-commande.html">Modifier</a>
+            </td>
+          </tr>
+          <tr>
+            <td>CMD002</td>
+            <td>2025-04-15</td>
+            <td>Fournisseur B</td>
+            <td>En attente</td>
+            <td>
+              <a href="modifier-commande.html">Modifier</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 ACKEYSTOCK. Tous droits réservés.</p>
+  </footer>
+
+</body>
+</html>

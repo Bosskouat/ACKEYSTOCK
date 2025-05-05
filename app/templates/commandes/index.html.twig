@@ -1,0 +1,63 @@
+{# filepath: c:\www\ACKEYSTOCK\app\templates\commandes\index.html.twig #}
+{% extends "base.html.twig" %}
+
+{% block title %}Commandes - ACKEYSTOCK{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Liste des commandes</h1>
+    
+    <div class="actions">
+        <a href="index.php?uri=ajouter-commande" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Nouvelle commande
+        </a>
+    </div>
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Référence</th>
+                <th>Date</th>
+                <th>Fournisseur</th>
+                <th>Statut</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for commande in commandes %}
+                <tr>
+                    <td>{{ commande.reference }}</td>
+                    <td>{{ commande.date_commande|date('d/m/Y') }}</td>
+                    <td>{{ commande.fournisseur_nom }}</td>
+                    <td>
+                        <span class="badge badge-{{ commande.statut == 'livree' ? 'success' : 'warning' }}">
+                            {{ commande.statut == 'livree' ? 'Livrée' : 'En attente' }}
+                        </span>
+                    </td>
+                    <td>
+                        <a href="index.php?uri=modifier-commande&id={{ commande.id }}" class="btn-edit" title="Modifier">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        
+                        {% if commande.statut == 'en_attente' %}
+                            <form method="post" action="index.php?uri=update-commande-status&id={{ commande.id }}" style="display:inline">
+                                <input type="hidden" name="statut" value="livree">
+                                <button type="submit" class="btn-status" title="Marquer comme livrée">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                            </form>
+                        {% else %}
+                            <form method="post" action="index.php?uri=update-commande-status&id={{ commande.id }}" style="display:inline">
+                                <input type="hidden" name="statut" value="en_attente">
+                                <button type="submit" class="btn-status" title="Marquer comme en attente">
+                                    <i class="fas fa-clock"></i>
+                                </button>
+                            </form>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

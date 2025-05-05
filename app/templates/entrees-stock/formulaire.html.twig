@@ -1,0 +1,125 @@
+{# filepath: c:\www\ACKEYSTOCK\app\templates\entrees-stock\formulaire.html.twig #}
+{% extends "base.html.twig" %}
+
+{% block title %}
+    {% if entree %}Modifier une entrée{% else %}Ajouter une entrée{% endif %} - ACKEYSTOCK
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>{% if entree %}Modifier une entrée{% else %}Ajouter une entrée{% endif %}</h1>
+    
+    {% if session.message %}
+        <div class="alert alert-{{ session.message.type }}">{{ session.message.text }}</div>
+    {% endif %}
+    
+    <div class="form-card">
+        <form action="index.php?uri=traiter-entree" method="POST">
+            {% if entree %}
+                <input type="hidden" name="id" value="{{ entree.id }}">
+            {% endif %}
+            
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="produit_id">Produit *</label>
+                    <select id="produit_id" name="produit_id" required>
+                        <option value="">Sélectionnez un produit</option>
+                        {% for produit in produits %}
+                            <option value="{{ produit.id }}" {% if entree and entree.produit_id == produit.id %}selected{% endif %}>
+                                {{ produit.nom }} (Stock actuel: {{ produit.quantite }})
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group col-md-6">
+                    <label for="fournisseur_id">Fournisseur *</label>
+                    <select id="fournisseur_id" name="fournisseur_id" required>
+                        <option value="">Sélectionnez un fournisseur</option>
+                        {% for fournisseur in fournisseurs %}
+                            <option value="{{ fournisseur.id }}" {% if entree and entree.fournisseur_id == fournisseur.id %}selected{% endif %}>
+                                {{ fournisseur.nom }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="quantite">Quantité *</label>
+                    <input type="number" id="quantite" name="quantite" value="{{ entree ? entree.quantite : '' }}" min="1" required>
+                </div>
+                
+                <div class="form-group col-md-4">
+                    <label for="prix_unitaire">Prix unitaire (€) *</label>
+                    <input type="number" id="prix_unitaire" name="prix_unitaire" value="{{ entree ? entree.prix_unitaire : '' }}" min="0.01" step="0.01" required>
+                </div>
+                
+                <div class="form-group col-md-4">
+                    <label for="date_mouvement">Date d'entrée *</label>
+                    <input type="date" id="date_mouvement" name="date_mouvement" value="{{ entree ? entree.date_mouvement|date('Y-m-d') : 'now'|date('Y-m-d') }}" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="reference_document">Référence document</label>
+                <input type="text" id="reference_document" name="reference_document" value="{{ entree ? entree.reference_document : '' }}" placeholder="N° de facture, bon de commande...">
+            </div>
+            
+            <div class="form-group">
+                <label for="commentaire">Commentaire</label>
+                <textarea id="commentaire" name="commentaire" rows="3">{{ entree ? entree.commentaire : '' }}</textarea>
+            </div>
+            
+            <div class="form-buttons">
+                <button type="submit" class="btn-primary">
+                    <i class="fas {% if entree %}fa-save{% else %}fa-plus{% endif %}"></i>
+                    {% if entree %}Enregistrer{% else %}Ajouter{% endif %}
+                </button>
+                <a href="index.php?uri=entrees-stock" class="btn-secondary">
+                    <i class="fas fa-times"></i> Annuler
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Calculer le total en temps réel
+    const quantiteInput = document.getElementById('quantite');
+    const prixInput = document.getElementById('prix_unitaire');
+    const produitSelect = document.getElementById('produit_id');
+    
+    function updateProductInfo() {
+        const produitId = produitSelect.value;
+        if (produitId) {
+            // Ici vous pourriez faire un appel AJAX pour récupérer des informations sur le produit
+            // et les afficher dynamiquement
+        }
+    }
+    
+    if (produitSelect) {
+        produitSelect.addEventListener('change', updateProductInfo);
+    }
+    
+    // Si c'est une modification, vérifier si le stock sera négatif
+    {% if entree %}
+    const originalQuantite = {{ entree.quantite }};
+    
+    quantiteInput.addEventListener('change', function() {
+        const newQuantite = parseInt(this.value) || 0;
+        const diff = newQuantite - originalQuantite;
+        
+        if (diff < 0) {
+            console.log("Attention: cette modification va réduire le stock de " + Math.abs(diff) + " unités.");
+            // Vous pouvez ajouter un avertissement visuel ici
+        }
+    });
+    {% endif %}
+});
+</script>
+{% endblock %}

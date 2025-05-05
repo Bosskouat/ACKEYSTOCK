@@ -1,0 +1,158 @@
+{# filepath: c:\www\ACKEYSTOCK\app\templates\entrees-stock\liste.html.twig #}
+{% extends "base.html.twig" %}
+
+{% block title %}Entrées de Stock - ACKEYSTOCK{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Gestion des Entrées de Stock</h1>
+    
+    {% if session.message %}
+        <div class="alert alert-{{ session.message.type }}">{{ session.message.text }}</div>
+    {% endif %}
+    
+    <div class="actions-bar">
+        <a href="index.php?uri=ajouter-entree" class="btn-ajouter">
+            <i class="fas fa-plus"></i> Ajouter une entrée
+        </a>
+        
+        <button class="btn-toggle-search" id="toggleSearch">
+            <i class="fas fa-filter"></i> Filtres
+        </button>
+    </div>
+    
+    <div class="search-panel" id="searchPanel">
+        <form action="index.php" method="GET" class="search-form">
+            <input type="hidden" name="uri" value="entrees-stock">
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="produit_id">Produit</label>
+                    <select id="produit_id" name="produit_id">
+                        <option value="">Tous les produits</option>
+                        {% for produit in produits %}
+                            <option value="{{ produit.id }}" {% if search.produit_id == produit.id %}selected{% endif %}>
+                                {{ produit.nom }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="fournisseur_id">Fournisseur</label>
+                    <select id="fournisseur_id" name="fournisseur_id">
+                        <option value="">Tous les fournisseurs</option>
+                        {% for fournisseur in fournisseurs %}
+                            <option value="{{ fournisseur.id }}" {% if search.fournisseur_id == fournisseur.id %}selected{% endif %}>
+                                {{ fournisseur.nom }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="date_debut">Du</label>
+                    <input type="date" id="date_debut" name="date_debut" value="{{ search.date_debut }}">
+                </div>
+                
+                <div class="form-group">
+                    <label for="date_fin">Au</label>
+                    <input type="date" id="date_fin" name="date_fin" value="{{ search.date_fin }}">
+                </div>
+                
+                <div class="form-group">
+                    <label for="reference">Référence</label>
+                    <input type="text" id="reference" name="reference" value="{{ search.reference }}" placeholder="Référence document">
+                </div>
+            </div>
+            
+            <div class="form-buttons">
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-search"></i> Filtrer
+                </button>
+                <a href="index.php?uri=entrees-stock" class="btn-secondary">
+                    <i class="fas fa-times"></i> Réinitialiser
+                </a>
+            </div>
+        </form>
+    </div>
+    
+    {% if entrees|length > 0 %}
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Produit</th>
+                        <th>Fournisseur</th>
+                        <th>Quantité</th>
+                        <th>Prix unitaire</th>
+                        <th>Total</th>
+                        <th>Référence</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entree in entrees %}
+                        <tr>
+                            <td>{{ entree.date_mouvement|date('d/m/Y') }}</td>
+                            <td>{{ entree.produit_nom }}</td>
+                            <td>{{ entree.fournisseur_nom }}</td>
+                            <td>{{ entree.quantite }}</td>
+                            <td>{{ entree.prix_unitaire }} €</td>
+                            <td>{{ (entree.quantite * entree.prix_unitaire)|number_format(2, ',', ' ') }} €</td>
+                            <td>{{ entree.reference_document }}</td>
+                            <td class="actions">
+                                <a href="index.php?uri=modifier-entree&id={{ entree.id }}" class="btn-edit" title="Modifier">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="#" onclick="confirmDelete({{ entree.id }})" class="btn-delete" title="Supprimer">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="no-data">
+            <p>Aucune entrée de stock trouvée</p>
+            <a href="index.php?uri=ajouter-entree" class="btn-primary">
+                <i class="fas fa-plus"></i> Ajouter une entrée
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Toggle du panneau de recherche
+    const toggleBtn = document.getElementById('toggleSearch');
+    const searchPanel = document.getElementById('searchPanel');
+    
+    if (toggleBtn && searchPanel) {
+        toggleBtn.addEventListener('click', function() {
+            searchPanel.classList.toggle('active');
+            toggleBtn.classList.toggle('active');
+        });
+    }
+    
+    // Si des critères de recherche sont actifs, ouvrir le panneau
+    const hasActiveFilters = {{ search|filter((v) => v != '')|length > 0 ? 'true' : 'false' }};
+    if (hasActiveFilters && searchPanel) {
+        searchPanel.classList.add('active');
+        if (toggleBtn) toggleBtn.classList.add('active');
+    }
+});
+
+// Confirmation de suppression
+function confirmDelete(id) {
+    if (confirm('Êtes-vous sûr de vouloir supprimer cette entrée ? Cette action ajustera également le stock du produit.')) {
+        window.location.href = 'index.php?uri=supprimer-entree&id=' + id;
+    }
+}
+</script>
+{% endblock %}

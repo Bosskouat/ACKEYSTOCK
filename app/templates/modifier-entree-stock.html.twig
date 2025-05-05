@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifier Entrée en Stock - ACKEYSTOCK</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <ul>
+                <li><a href="index.php?uri=dashboard">Dashboard</a></li>
+                <li><a href="index.php?uri=entrees-stock" class="active">Entrées Stock</a></li>
+                <li><a href="index.php?uri=logout">Déconnexion</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="form-section">
+            <h1>Modifier Entrée en Stock</h1>
+
+            <form method="POST" action="index.php?uri=modifier-entree-stock" class="form-stock">
+                <input type="hidden" name="id" value="{{ entree.id }}">
+
+                <div class="form-group">
+                    <label for="produit_id">Produit :</label>
+                    <select name="produit_id" id="produit_id" required>
+                        {% for produit in produits %}
+                            <option value="{{ produit.id }}" {% if produit.id == entree.produit_id %}selected{% endif %}>
+                                {{ produit.nom }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="fournisseur_id">Fournisseur :</label>
+                    <select name="fournisseur_id" id="fournisseur_id" required>
+                        {% for fournisseur in fournisseurs %}
+                            <option value="{{ fournisseur.id }}" {% if fournisseur.id == entree.fournisseur_id %}selected{% endif %}>
+                                {{ fournisseur.nom }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="quantite">Quantité :</label>
+                    <input type="number" name="quantite" id="quantite" value="{{ entree.quantite }}" required min="1">
+                </div>
+
+                <div class="form-group">
+                    <label for="date_entree">Date d'entrée :</label>
+                    <input type="date" name="date_entree" id="date_entree" value="{{ entree.date_entree }}" required>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Enregistrer</button>
+                    <a href="index.php?uri=entrees-stock" class="btn-secondary">Annuler</a>
+                </div>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

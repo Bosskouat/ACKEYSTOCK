@@ -1,0 +1,32 @@
+<li class="nav-item alerts-container">
+    <div class="alerts-dropdown">
+        <a href="#" class="nav-link">
+            <i class="fas fa-bell"></i>
+            {% if alerts and alerts|length > 0 %}
+                <span class="alerts-badge">{{ alerts|length }}</span>
+            {% endif %}
+        </a>
+        <div class="alerts-menu">
+            <div class="alerts-header">
+                <h3>Notifications</h3>
+            </div>
+            <div class="alerts-list">
+                {% if alerts and alerts|length > 0 %}
+                    {% for alert in alerts %}
+                        <div class="alert-item" data-alert-id="{{ alert.id }}">
+                            <div class="alert-content">
+                                <p>{{ alert.message }}</p>
+                                <small>{{ alert.date_creation|date('d/m/Y H:i') }}</small>
+                            </div>
+                            <button class="mark-read">
+                                <i class="fas fa-check"></i>
+                            </button>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="no-alerts">Aucune notification</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</li>

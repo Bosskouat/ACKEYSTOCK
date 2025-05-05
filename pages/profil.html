@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Profil - ACKEYSTOCK</title>
+  <meta name="description" content="Gérer vos informations personnelles et mot de passe dans ACKEYSTOCK.">
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <header>
+    <nav>
+      <ul>
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="produits.html">Produits</a></li>
+        <li><a href="fournisseurs.html">Fournisseurs</a></li>
+        <li><a href="commandes.html">Commandes</a></li>
+        <li><a href="stock.html">Stock</a></li>
+        <li><a href="rapports.html">Rapports</a></li>
+        <li><a href="logout.html">Déconnexion</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main style="max-width: 600px; margin: auto; padding: 40px 20px;">
+    <h1>Mon profil</h1>
+
+    <form action="#" method="post">
+      <section>
+        <h2>Informations personnelles</h2>
+        <div class="form-group">
+          <label for="nom">Nom complet</label>
+          <input type="text" id="nom" name="nom" value="Jean Dupont" required autocomplete="name">
+        </div>
+        <div class="form-group">
+          <label for="email">Adresse email</label>
+          <input type="email" id="email" name="email" value="jean.dupont@example.com" required autocomplete="email">
+        </div>
+      </section>
+
+      <section style="margin-top: 40px;">
+        <h2>Modifier le mot de passe</h2>
+        <div class="form-group">
+          <label for="mdp-actuel">Mot de passe actuel</label>
+          <input type="password" id="mdp-actuel" name="mdp-actuel" autocomplete="current-password">
+        </div>
+        <div class="form-group">
+          <label for="mdp-nouveau">Nouveau mot de passe</label>
+          <input type="password" id="mdp-nouveau" name="mdp-nouveau" autocomplete="new-password">
+        </div>
+        <div class="form-group">
+          <label for="mdp-confirm">Confirmer le nouveau mot de passe</label>
+          <input type="password" id="mdp-confirm" name="mdp-confirm" autocomplete="new-password">
+        </div>
+      </section>
+
+      <div class="form-group" style="margin-top: 30px;">
+        <button type="submit">Mettre à jour mon profil</button>
+      </div>
+    </form>
+  </main>
+
+  <footer style="text-align:center; margin-top: 40px;">
+    <p>&copy; 2025 ACKEYSTOCK. Tous droits réservés.</p>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,118 @@
+{# filepath: c:\www\ACKEYSTOCK\app\templates\alertes\index.html.twig #}
+{% extends "base.html.twig" %}
+
+{% block title %}Alertes - ACKEYSTOCK{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Gestion des Alertes</h1>
+    
+    <div class="alerts-actions">
+        <a href="index.php?uri=check-stock-levels" class="btn btn-primary">
+            <i class="fas fa-sync"></i> Vérifier les niveaux de stock
+        </a>
+    </div>
+    
+    <div class="alerts-filters">
+        <button class="filter-btn active" data-filter="all">Toutes</button>
+        <button class="filter-btn" data-filter="rupture">Ruptures</button>
+        <button class="filter-btn" data-filter="stock_bas">Stocks bas</button>
+    </div>
+    
+    <div class="alerts-list">
+        {% if alerts|length > 0 %}
+            {% for alert in alerts %}
+                <div class="alert-card {{ alert.lu ? 'read' : '' }}" data-type="{{ alert.type }}">
+                    <div class="alert-header">
+                        <div class="alert-icon">
+                            {% if alert.type == 'rupture' %}
+                                <i class="fas fa-exclamation-circle"></i>
+                            {% else %}
+                                <i class="fas fa-exclamation-triangle"></i>
+                            {% endif %}
+                        </div>
+                        <div class="alert-product">{{ alert.produit_nom }}</div>
+                        <div class="alert-status">
+                            {% if alert.lu %}
+                                <span class="badge badge-secondary">Lu</span>
+                            {% else %}
+                                <span class="badge badge-warning">Non lu</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="alert-content">
+                        <p>{{ alert.message }}</p>
+                    </div>
+                    <div class="alert-footer">
+                        <div class="alert-date">{{ alert.date_creation|date('d/m/Y H:i') }}</div>
+                        {% if not alert.lu %}
+                            <button class="mark-read-btn" data-alert-id="{{ alert.id }}">
+                                <i class="fas fa-check"></i> Marquer comme lu
+                            </button>
+                        {% endif %}
+                        <a href="index.php?uri=produits&id={{ alert.produit_id }}" class="view-product-btn">
+                            <i class="fas fa-eye"></i> Voir le produit
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="no-alerts">
+                <i class="fas fa-check-circle"></i>
+                <p>Aucune alerte à afficher</p>
+                <small>Tous les produits ont des niveaux de stock suffisants.</small>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Filtrage des alertes
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Activer le bouton cliqué
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Filtrer les alertes
+            const filter = this.dataset.filter;
+            document.querySelectorAll('.alert-card').forEach(card => {
+                if (filter === 'all' || card.dataset.type === filter) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    });
+    
+    // Marquer les alertes comme lues
+    document.querySelectorAll('.mark-read-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const alertId = this.dataset.alertId;
+            const alertCard = this.closest('.alert-card');
+            
+            fetch('index.php?uri=mark-alert-read', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ alert_id: alertId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alertCard.classList.add('read');
+                    this.parentNode.innerHTML = '<div class="alert-date">' + 
+                        alertCard.querySelector('.alert-date').textContent + '</div>' +
+                        '<span class="badge badge-secondary">Lu</span>';
+                }
+            });
+        });
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,66 @@
+{# filepath: c:\www\ACKEYSTOCK\app\templates\stock\entrees-index.html.twig #}
+{% extends "base.html.twig" %}
+
+{% block title %}Entrées de Stock - ACKEYSTOCK{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Entrées de Stock</h1>
+        <div class="page-actions">
+            <a href="index.php?uri=ajouter-entree" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Nouvelle Entrée
+            </a>
+        </div>
+    </div>
+    
+    {% if entrees|length > 0 %}
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Produit</th>
+                        <th>Quantité</th>
+                        <th>Prix Achat</th>
+                        <th>Fournisseur</th>
+                        <th>Référence</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entree in entrees %}
+                        <tr>
+                            <td>{{ entree.date_mouvement|date('d/m/Y') }}</td>
+                            <td>{{ entree.produit_nom }}</td>
+                            <td>{{ entree.quantite }}</td>
+                            <td>{{ entree.prix_achat|number_format(2, ',', ' ') }} €</td>
+                            <td>{{ entree.fournisseur_nom }}</td>
+                            <td>{{ entree.reference_document }}</td>
+                            <td class="actions">
+                                <a href="javascript:void(0)" onclick="confirmDelete({{ entree.id }})" class="btn btn-danger btn-sm">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            Aucune entrée de stock enregistrée.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function confirmDelete(id) {
+        if (confirm("Êtes-vous sûr de vouloir supprimer cette entrée ? Le stock sera automatiquement ajusté.")) {
+            window.location.href = "index.php?uri=supprimer-entree&id=" + id;
+        }
+    }
+</script>
+{% endblock %}

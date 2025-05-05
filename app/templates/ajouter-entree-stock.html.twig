@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nouvelle Entrée en Stock - ACKEYSTOCK</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <ul>
+                <li><a href="index.php?uri=dashboard">Dashboard</a></li>
+                <li><a href="index.php?uri=entrees-stock" class="active">Entrées Stock</a></li>
+                <li><a href="index.php?uri=logout">Déconnexion</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="form-section">
+            <h1>Nouvelle Entrée en Stock</h1>
+
+            <form method="POST" action="index.php?uri=entrees-stock" class="form-stock">
+                <div class="form-group">
+                    <label for="produit_id">Produit :</label>
+                    <select name="produit_id" id="produit_id" required>
+                        <option value="">Sélectionnez un produit</option>
+                        {% for produit in produits %}
+                            <option value="{{ produit.id }}">{{ produit.nom }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="fournisseur_id">Fournisseur :</label>
+                    <select name="fournisseur_id" id="fournisseur_id" required>
+                        <option value="">Sélectionnez un fournisseur</option>
+                        {% for fournisseur in fournisseurs %}
+                            <option value="{{ fournisseur.id }}">{{ fournisseur.nom }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="quantite">Quantité :</label>
+                    <input type="number" name="quantite" id="quantite" required min="1">
+                </div>
+
+                <div class="form-group">
+                    <label for="date_entree">Date d'entrée :</label>
+                    <input type="date" name="date_entree" id="date_entree" required>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Enregistrer</button>
+                    <a href="index.php?uri=entrees-stock" class="btn-secondary">Annuler</a>
+                </div>
+            </form>
+        </section>
+    </main>
+</body>
+</html>
